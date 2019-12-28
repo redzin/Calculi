@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright (c) 2017. J. S. R. Hansen
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  --><resources><!-- Base application theme. --><style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"><item name="colorPrimary">@color/colorPrimary</item><item name="colorPrimaryDark">@color/colorPrimaryDark</item><item name="colorAccent">@color/colorAccent</item></style><style name="AppTheme.Container" parent="AppTheme"><item name="android:background">@color/colorBackground</item></style><style name="AppTheme.InputTextContainer"><item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item><item name="android:minHeight">42dp</item><item name="android:padding">6dp</item><!--<item name="android:background">@drawable/textlines</item>--></style><style name="AppTheme.InputText"><item name="android:textSize">24dp</item><item name="android:textColor">@color/colorInputText</item><item name="android:gravity">left|center</item><item name="android:layout_width">match_parent</item><item name="android:layout_height">30dp</item><item name="android:text">@string/initInputString</item><item name="android:background">@android:color/transparent</item><item name="android:maxLines">1</item><item name="android:inputType">text</item></style><style name="AppTheme.CalcButton" parent="Base.Widget.AppCompat.Button.Colored"><item name="android:layout_columnWeight">1</item><item name="android:layout_rowWeight">1</item><item name="android:textSize">14dp</item><item name="android:backgroundTint">@color/colorButtonBackground</item><item name="android:textColor">@color/colorButtonText</item><item name="android:minHeight">30dp</item><item name="android:maxHeight">80dp</item><item name="android:minWidth">30dp</item><item name="android:textAllCaps">false</item><item name="android:padding">0dp</item></style><style name="AppTheme.CalcButtonNumeric" parent="AppTheme.CalcButton"><item name="android:backgroundTint">@color/colorButtonNumericBackground</item><item name="android:textColor">@color/colorButtonNumericText</item></style><style name="AppTheme.CalcButtonSpecial" parent="AppTheme.CalcButton"><item name="android:backgroundTint">@color/colorButtonSpecialBackground</item><item name="android:textColor">@color/colorButtonSpecialText</item></style><style name="AppTheme.CalcButtonBlue" parent="AppTheme.CalcButton"><item name="android:backgroundTint">@color/colorButtonBlueBackground</item><item name="android:textColor">@color/colorButtonBlueText</item></style><style name="AppTheme.CalcButtonWideNumeric" parent="AppTheme.CalcButtonWide"><item name="android:backgroundTint">@color/colorButtonNumericBackground</item><item name="android:textColor">@color/colorButtonNumericText</item></style><style name="AppTheme.CalcButtonWide" parent="AppTheme.CalcButton"><item name="android:layout_columnSpan">2</item></style><style name="AppTheme.CalcButtonTall" parent="AppTheme.CalcButton"><item name="android:layout_rowSpan">2</item></style><style name="AppTheme.CalcButtonTallBlue" parent="AppTheme.CalcButtonBlue"><item name="android:layout_rowSpan">2</item></style></resources>

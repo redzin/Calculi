@@ -1,0 +1,116 @@
+<!--
+  ~ Copyright (c) 2017. J. S. R. Hansen
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<resources>
+  <string name="app_name">Calculi</string>
+
+  <!-- Numeric -->
+  <string name="button_0">0</string>
+  <string name="button_1">1</string>
+  <string name="button_2">2</string>
+  <string name="button_3">3</string>
+  <string name="button_4">4</string>
+  <string name="button_5">5</string>
+  <string name="button_6">6</string>
+  <string name="button_7">7</string>
+  <string name="button_8">8</string>
+  <string name="button_9">9</string>
+  <string name="button_point">.</string>
+
+  <!-- Arithmetic and algebra-->
+  <string name="button_add">&#43;</string>
+  <string name="button_subtract">&#8722;</string>
+  <string name="button_multiply">&#10005;</string>
+  <string name="button_divide">&#247;</string>
+  <string name="button_modulo">mod</string>
+  <string name="button_exponential">exp</string>
+  <string name="button_square">x&#178;</string>
+  <string name="button_square_root">&#8730;</string>
+  <string name="button_power">x&#696;</string>
+  <string name="button_root">root</string>
+  <string name="button_factorial">n!</string>
+
+  <!-- Meta functions -->
+  <string name="button_delete">&#9003;</string>
+  <string name="button_clear">CLR</string>
+  <string name="button_enter">=</string>
+  <!--<string name="button_enter">&#9166;</string>-->
+  <string name="button_2nd">2nd</string>
+  <string name="button_left_parenthesis">(</string>
+  <string name="button_right_parenthesis">)</string>
+  <string name="button_left_arrow">&#8592;</string>
+  <string name="button_right_arrow">&#8594;</string>
+  <string name="button_answer">ANS</string>
+  <string name="button_log">log&#8321;&#8320;</string>
+  <string name="button_ln">ln</string>
+
+  <!-- Trigonometry -->
+  <string name="button_sine">sin</string>
+  <string name="button_cosine">cos</string>
+  <string name="button_tangent">tan</string>
+  <string name="button_secant">sec</string>
+  <string name="button_cosecant">csc</string>
+  <string name="button_cotangent">cot</string>
+
+  <!-- IO -->
+  <string name="initInputString">0</string>
+  <string name="outputFragmentDefault"></string>
+  <string name="cursor">&#124;</string>
+
+  <!--Output symbols (used for conversion of symbol to string)-->
+  <string name="symbol_0">0</string>
+  <string name="symbol_1">1</string>
+  <string name="symbol_2">2</string>
+  <string name="symbol_3">3</string>
+  <string name="symbol_4">4</string>
+  <string name="symbol_5">5</string>
+  <string name="symbol_6">6</string>
+  <string name="symbol_7">7</string>
+  <string name="symbol_8">8</string>
+  <string name="symbol_9">9</string>
+  <string name="symbol_point">.</string>
+  <string name="symbol_add">&#160;&#43;&#160;</string>
+  <string name="symbol_subtract">&#160;&#8722;&#160;</string>
+  <string name="symbol_multiply">&#160;&#215;&#160;</string>
+  <string name="symbol_divide">&#160;&#247;&#160;</string>
+  <string name="symbol_modulo">&#160;mod&#160;</string>
+  <string name="symbol_exponential">&#160;exp(</string>
+  <string name="symbol_power">^</string>
+  <string name="symbol_sqr">&#178;&#160;</string>
+  <string name="symbol_sqrt">&#160;&#8730;(</string>
+  <string name="symbol_logarithm">&#160;log&#8321;&#8320;(</string>
+  <string name="symbol_natural_logarithm">&#160;ln(</string>
+  <string name="symbol_left_parenthesis">(</string>
+  <string name="symbol_right_parenthesis">)</string>
+  <string name="symbol_answer">&#160;ANS&#160;</string>
+  <string name="symbol_sine">&#160;sin(</string>
+  <string name="symbol_cosine">&#160;cos(</string>
+  <string name="symbol_tangent">&#160;tan(</string>
+  <string name="symbol_secant">&#160;sec(</string>
+  <string name="symbol_cosecant">&#160;csc(</string>
+  <string name="symbol_cotangent">&#160;cot(</string>
+
+
+  <string name="history_get_result">Get result</string>
+  <string name="history_get_expression">Get expression</string>
+  
+</resources>
