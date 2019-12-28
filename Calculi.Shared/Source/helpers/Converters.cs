@@ -26,8 +26,8 @@ namespace Calculi.Shared.Converters
     }
     internal class IExpressionToICalculationConverter : IConverter<IExpression, ICalculation>
     {
-        private CalculatorIO calculatorIO;
-        public IExpressionToICalculationConverter(CalculatorIO calculatorIO)
+        private ICalculatorIO calculatorIO;
+        public IExpressionToICalculationConverter(ICalculatorIO calculatorIO)
         {
             this.calculatorIO = calculatorIO;
         }

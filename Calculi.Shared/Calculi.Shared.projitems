@@ -9,9 +9,12 @@
     <Import_RootNamespace>Calculi.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Calculations.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CalculatorIO.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Converters.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Source\helpers\Calculations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Source\CalculatorIO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Source\helpers\Converters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Source\helpers\Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Source\helpers\" />
   </ItemGroup>
 </Project>

@@ -14,10 +14,10 @@ using Calculi.Shared.Converters;
 
 namespace Calculi
 {
-    internal static class Factory
+    internal static class ConverterFactories
     {
 
-        internal static IConverter<IExpression, ICalculation> GetExpressionToICalculationConverter(CalculatorIO calculatorIO)
+        internal static IConverter<IExpression, ICalculation> GetExpressionToICalculationConverter(ICalculatorIO calculatorIO)
         {
             return new IExpressionToICalculationConverter(calculatorIO);
         }

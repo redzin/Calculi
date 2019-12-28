@@ -66,8 +66,10 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Factory.cs" />
-    <Compile Include="MainActivity.cs" />
+    <Compile Include="Source\components\history\CalculationHistoryViewHolder.cs" />
+    <Compile Include="Source\components\history\CalculatorIOHistoryAdapter.cs" />
+    <Compile Include="Source\factories\ConverterFactories.cs" />
+    <Compile Include="Source\MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

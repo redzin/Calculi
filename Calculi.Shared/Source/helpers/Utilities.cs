@@ -18,17 +18,6 @@ namespace Calculi.Shared.Utilities
                 }
             }
         }
-        //public static IEnumerable<T> TakeAllButLast<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> selector)
-        //{
-        //    foreach (T item in source)
-        //    {
-        //        if (source.GetEnumerator().)
-        //        {
-
-        //        }
-        //        yield return item;
-        //    }
-        //}
         internal static IExpression ToExpression(this IEnumerable<Symbol> symbols)
         {
             return symbols.ToList().ToExpression();

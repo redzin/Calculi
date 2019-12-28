@@ -4,8 +4,6 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using Android.Views.InputMethods;
-
-using System;
 using System.Collections.Generic;
 
 using Calculi.Shared;
@@ -26,17 +24,18 @@ using System.Linq;
  * Refactor computation to happen only ever through one main-activity method, implement exception handling
  * Implement config for calculator class
  * Refactor layout file names
+ * Fix ANS button
  */
-
 
 /*
 TODO:
     * Add "sneak peak" calculation area
     * Format ui history elements properly and make them clickable
     * Swipe for constants/functions
-    * Upload to google app store
-    * Dark mode / other themes
+    * Dark mode / other themes / transparent?
     * Landscape mode?
+    * Make homescreen logo
+    * Upload to google app store
 */
 
 namespace Calculi
@@ -51,7 +50,7 @@ namespace Calculi
     
     public class MainActivity : AppCompatActivity
     {
-        CalculatorIO calculatorIO;
+        ICalculatorIO calculatorIO;
         IConverter<Symbol, string> symbolToStringConverter;
         IConverter<string, Symbol> stringToSymbolConverter;
         IConverter<IExpression, string> expressionToStringConverter;
@@ -61,8 +60,7 @@ namespace Calculi
 
         RecyclerView historyRecyclerView;
         RecyclerView.LayoutManager historyLayoutManager;
-        CalculatorIOHistoryAdapter historyAdapter;
-        
+        ICalculatorIOHistoryAdapter historyAdapter;
         
         EditText input;
         FrameLayout inputFrameLayout;
@@ -75,12 +73,12 @@ namespace Calculi
             SetContentView(Resource.Layout.activity_main);
 
             calculatorIO = new Shared.CalculatorIO();
-            this.symbolToStringConverter = Factory.GetSymbolToStringConverter(this.Resources);
-            this.stringToSymbolConverter = Factory.GetStringToSymbolConverter(this.Resources);
-            this.expressionToStringConverter = Factory.GetExpressionToStringConverter(symbolToStringConverter);
-            this.expressionToCalculationConverter = Factory.GetExpressionToICalculationConverter(calculatorIO);
-            this.calculationToDoubleConverter = Factory.GetCalculationToDoubleConverter();
-            this.calculationToExpressionConverter = Factory.GetCalculationToExpressionConverter();
+            this.symbolToStringConverter = ConverterFactories.GetSymbolToStringConverter(this.Resources);
+            this.stringToSymbolConverter = ConverterFactories.GetStringToSymbolConverter(this.Resources);
+            this.expressionToStringConverter = ConverterFactories.GetExpressionToStringConverter(symbolToStringConverter);
+            this.expressionToCalculationConverter = ConverterFactories.GetExpressionToICalculationConverter(calculatorIO);
+            this.calculationToDoubleConverter = ConverterFactories.GetCalculationToDoubleConverter();
+            this.calculationToExpressionConverter = ConverterFactories.GetCalculationToExpressionConverter();
 
             historyRecyclerView = FindViewById<RecyclerView>(Resource.Id.HistoryRecyclerView);
             historyLayoutManager = new LinearLayoutManager(this)
@@ -88,7 +86,7 @@ namespace Calculi
                 StackFromEnd = true,
                 ReverseLayout = false
             };
-            historyAdapter = new CalculatorIOHistoryAdapter(
+            historyAdapter = new ICalculatorIOHistoryAdapter(
                     calculatorIO,
                     calculationToDoubleConverter,
                     expressionToCalculationConverter,
@@ -128,9 +126,6 @@ namespace Calculi
 
                 popupmenu.Show();
             };
-
-
-
 
             input = FindViewById<EditText>(Resource.Id.Input);
             inputFrameLayout = FindViewById<FrameLayout>(Resource.Id.InputFrameLayout);
@@ -390,8 +385,7 @@ namespace Calculi
             buttonEnter.Click += (sender, e) =>
             {
                 historyAdapter.NotifyItemInserted(0);
-                calculatorIO.AddInputToHistory();
-                calculatorIO.ClearInput();
+                calculatorIO.MoveInputToHistory();
                 UpdateInputView(calculatorIO);
             };
 
@@ -401,11 +395,10 @@ namespace Calculi
         public int GetIndexForEditView()
         {
             return calculatorIO.currentExpression
-                .Take(calculatorIO.index)
+                .Take(calculatorIO.position)
                 .Select(s => symbolToStringConverter.Convert(s).Length)
                 .Sum();
         }
-
         public void SetIndexFromViewPosition(int viewIndex)
         {
             int i = 0;
@@ -413,7 +406,7 @@ namespace Calculi
             {
                 ++i;
             }
-            calculatorIO.index = i;
+            calculatorIO.position = i;
         }
         private void SetSelectionFromTouchEvent(Android.Views.View.TouchEventArgs e)
         {
@@ -427,89 +420,20 @@ namespace Calculi
                 UpdateInputView(calculatorIO);
             }
         }
-
-        private void UpdateInputView(CalculatorIO io)
+        private void UpdateInputView(ICalculatorIO io)
         {
             input.Text = this.expressionToStringConverter.Convert(io.currentExpression);
             input.RequestFocus();
             input.SetSelection(GetIndexForEditView());
             historyLayoutManager.ScrollToPosition(io.GetHistory().Count-1);
         }
+        
+        //public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        //{
+        //    Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-        {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    public class CalculatorIOHistoryAdapter : RecyclerView.Adapter
-    {
-        IConverter<ICalculation, double> calculationToDoubleConverter;
-        IConverter<IExpression, ICalculation> expressionToICalculationConverter;
-        IConverter<IExpression, string> expressionToStringConverter;
-        public event EventHandler<int> ItemClick;
-        private CalculatorIO calculator;
-        public override int ItemCount
-        {
-            get { return calculator.GetHistory().Count; }
-        }
-        void OnClick(int position)
-        {
-                ItemClick(this, position);
-        }
-        internal CalculatorIOHistoryAdapter(
-                CalculatorIO calculator,
-                IConverter<ICalculation, double> calculationToDoubleConverter,
-                IConverter<IExpression, ICalculation> expressionToICalculationConverter,
-                IConverter<IExpression, string> expressionToStringConverter
-            )
-        {
-            this.calculationToDoubleConverter = calculationToDoubleConverter;
-            this.expressionToICalculationConverter = expressionToICalculationConverter;
-            this.expressionToStringConverter = expressionToStringConverter;
-
-            this.calculator = calculator;
-            calculator.BindToHistoryChange((sender, e) => {
-                this.NotifyItemRangeRemoved(0, 1);
-                this.NotifyItemInserted(calculator.GetHistory().Count-1);
-            });
-        }
-
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
-        {
-            CalculationHistoryViewHolder vh = holder as CalculationHistoryViewHolder;
-            IExpression expr = calculator.GetHistory(position);
-            ICalculation calc = expressionToICalculationConverter.Convert(expr);
-            double result = calculationToDoubleConverter.Convert(calc);
-            vh.calculationResult.Text = result.ToString();
-            vh.calculationExpression.Text = expressionToStringConverter.Convert(calculator.GetHistory(position));
-        }
-
-        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
-        {
-            // Inflate the CardView for the photo:
-            View itemView = LayoutInflater.From(parent.Context).
-                        Inflate(Resource.Layout.history_entry, parent, false);
-
-            // Create a ViewHolder to hold view references inside the CardView:
-            CalculationHistoryViewHolder vh = new CalculationHistoryViewHolder(itemView, OnClick);
-            return vh;
-        }
-    }
-    public class CalculationHistoryViewHolder : RecyclerView.ViewHolder
-    {
-        public TextView calculationResult { get; private set; }
-        public TextView calculationExpression { get; private set; }
-
-        public CalculationHistoryViewHolder(View itemView, Action<int> listener) : base(itemView)
-        {
-            // Locate and cache view references:
-            calculationResult = itemView.FindViewById<TextView>(Resource.Id.calculationResultTextView);
-            calculationExpression = itemView.FindViewById<TextView>(Resource.Id.calculationExpressionTextView);
-            itemView.Click += (sender, e) => listener.Invoke(base.LayoutPosition);
-        }
+        //    base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        //}
     }
 
 }
