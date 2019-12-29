@@ -70,6 +70,10 @@ namespace Calculi
             };
             return new SymbolToStringConverter(dictionary);
         }
+        internal static IConverter<string, IExpression> GetStringToExpressionConverter(IConverter<string, Symbol> stringToSymbolConverter)
+        {
+            return new StringToIExpressionConverter(stringToSymbolConverter);
+        }
         internal static IConverter<string, Symbol> GetStringToSymbolConverter(Android.Content.Res.Resources res)
         {
             Dictionary<string, Symbol> dictionary = new Dictionary<string, Symbol>() {

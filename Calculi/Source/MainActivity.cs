@@ -19,15 +19,14 @@ using System.Linq;
 using System;
 
 /* TODO
- * Fix bug where decimal point is not computed correct for e.g. "2.02"
- * Fix conversion of big doubles to string (e.g. "1.62E32" doesn't convert when getting result from history)
  * Fix ANS button
+ * Rework how large numbers work; introduce an "exponent" operator E, e.g. "1.2E16"
  * Write/fix tests
  */
 
 /*
 TODO:
-    * Add "sneak peak" calculation area
+    * Revamp design and add "sneak peak" calculation area
     * Swipe for constants/functions
     * Dark mode / other themes / transparent?
     * Landscape mode?
@@ -50,6 +49,7 @@ namespace Calculi
         ICalculatorIO calculatorIO;
         IConverter<Symbol, string> symbolToStringConverter;
         IConverter<string, Symbol> stringToSymbolConverter;
+        IConverter<string, IExpression> stringToExpressionConverter;
         IConverter<IExpression, string> expressionToStringConverter;
         IConverter<IExpression, ICalculation> expressionToCalculationConverter;
         IConverter<ICalculation, double> calculationToDoubleConverter;
@@ -380,6 +380,7 @@ namespace Calculi
             calculatorIO = new Shared.CalculatorIO();
             this.symbolToStringConverter = ConverterFactory.GetSymbolToStringConverter(this.Resources);
             this.stringToSymbolConverter = ConverterFactory.GetStringToSymbolConverter(this.Resources);
+            this.stringToExpressionConverter = ConverterFactory.GetStringToExpressionConverter(this.stringToSymbolConverter);
             this.expressionToStringConverter = ConverterFactory.GetExpressionToStringConverter(symbolToStringConverter);
             this.expressionToCalculationConverter = ConverterFactory.GetExpressionToICalculationConverter(calculatorIO);
             this.calculationToDoubleConverter = ConverterFactory.GetICalculationToDoubleConverter();
@@ -419,10 +420,7 @@ namespace Calculi
                             try
                             {
                                 double result = calculationToDoubleConverter.Convert(expressionToCalculationConverter.Convert(calculatorIO.GetHistory(position)));
-                                result
-                                    .ToString().ToList()
-                                    .Select(s => stringToSymbolConverter.Convert(s.ToString())).ToList()
-                                    .ForEach(s => calculatorIO.InsertSymbol(s));
+                                stringToExpressionConverter.Convert(result.ToString()).ToList().ForEach(s => calculatorIO.InsertSymbol(s));
                             }
                             catch (Exception excptn)
                             {
