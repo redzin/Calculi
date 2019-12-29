@@ -14,7 +14,7 @@ using Calculi.Shared.Converters;
 
 namespace Calculi
 {
-    internal static class ConverterFactories
+    internal static class ConverterFactory
     {
 
         internal static IConverter<IExpression, ICalculation> GetExpressionToICalculationConverter(ICalculatorIO calculatorIO)
@@ -25,11 +25,11 @@ namespace Calculi
         {
             return new IExpressionToStringConverter(symbolToStringConverter);
         }
-        internal static IConverter<ICalculation, IExpression> GetCalculationToExpressionConverter()
+        internal static IConverter<ICalculation, IExpression> GetICalculationToExpressionConverter()
         {
             return new ICalculationToIExpressionConverter();
         }
-        internal static IConverter<ICalculation, double> GetCalculationToDoubleConverter()
+        internal static IConverter<ICalculation, double> GetICalculationToDoubleConverter()
         {
             return new ICalculationToDoubleConverter();
         }

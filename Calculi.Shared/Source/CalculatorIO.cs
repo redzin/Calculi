@@ -6,21 +6,6 @@ using System.Linq;
 
 namespace Calculi.Shared
 {
-    interface ICalculatorIO
-    {
-        public int position { get; set; }
-        public Expression currentExpression { get; set; }
-        public List<IExpression> GetHistory();
-        public IExpression GetHistory(int i);
-        public void BindToHistoryChange(Action<object, NotifyCollectionChangedEventArgs> callback);
-        public void IncrementIndex();
-        public void DecrementIndex();
-        public int GetIndex();
-        public void InsertSymbol(Symbol symbol);
-        public void RemoveSymbol();
-        public void ClearInput();
-        public void MoveInputToHistory();
-    }
     class CalculatorIO : ICalculatorIO
     {
         private ObservableCollection<IExpression> history;

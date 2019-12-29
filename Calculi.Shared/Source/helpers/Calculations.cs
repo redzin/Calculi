@@ -64,14 +64,6 @@ namespace Calculi.Shared
             }
         }
     }
-    class CalculationFunctions
-    {
-        public static double Point(int a, int b)
-        {
-            string separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            return Convert.ToDouble(a.ToString() + separator + b.ToString());
-        }
-    }
     internal interface IExpression : IList<Symbol> { }
     class Expression : IExpression
     {

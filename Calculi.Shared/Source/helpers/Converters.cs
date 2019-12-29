@@ -27,6 +27,20 @@ namespace Calculi.Shared.Converters
     internal class IExpressionToICalculationConverter : IConverter<IExpression, ICalculation>
     {
         private ICalculatorIO calculatorIO;
+        private readonly Dictionary<Symbol, int> translateSymbolToInteger = new Dictionary<Symbol, int>()
+        {
+            {Symbol.ZERO, 0 },
+            {Symbol.ONE, 1 },
+            {Symbol.TWO, 2 },
+            {Symbol.THREE, 3 },
+            {Symbol.FOUR, 4 },
+            {Symbol.FIVE, 5 },
+            {Symbol.SIX , 6 },
+            {Symbol.SEVEN, 7 },
+            {Symbol.EIGHT, 8 },
+            {Symbol.NINE, 9 }
+        };
+
         public IExpressionToICalculationConverter(ICalculatorIO calculatorIO)
         {
             this.calculatorIO = calculatorIO;
@@ -243,49 +257,29 @@ namespace Calculi.Shared.Converters
             switch (operation)
             {
                 case Symbol.POINT:
-                    IExpression lhs = expression.TakeWhile(symbol => !symbol.Equals(operation)).ToExpression();
+                    IExpression lhs = expression.TakeWhile(symbol => !symbol.Equals(Symbol.POINT)).ToExpression();
                     lhs = lhs.Count > 0 ? lhs : new Expression() { Symbol.ZERO };
-                    IExpression rhs = expression.SkipWhile(symbol => !symbol.Equals(operation)).Skip(1).ToExpression();
+                    IExpression rhs = expression.SkipWhile(symbol => !symbol.Equals(Symbol.POINT)).Skip(1).ToExpression();
                     rhs = rhs.Count > 0 ? rhs : new Expression() { Symbol.ZERO };
                     return new Calculation(
                         new List<ICalculation>()
                         {
-                            ParseNumeric(lhs, history),
-                            ParseNumeric(rhs.TakeWhile(symbol => !symbol.Equals(Symbol.SQR)).ToExpression(), history)
-
+                            ParseInteger(lhs, history),
+                            ParseInteger(rhs, history)
                         },
-                        a => CalculationFunctions.Point(System.Convert.ToInt32(a[0]), System.Convert.ToInt32(a[1]))
+                        a => a[0] + (a[1] / Math.Pow(10, (rhs.Count)))
                     );
                 default:
                     break;
             }
-            return ParseNumeric(expression, history);
+            return ParseInteger(expression, history);
         }
-        private ICalculation ParseNumeric(IExpression expression, List<IExpression> history)
+        private ICalculation ParseInteger(IExpression expression, List<IExpression> history)
         {
-            if (expression[0].Equals(Symbol.ANSWER) && history.Count > 1)
-            {
-                return ParseExpression(history.Last(), history.GetRange(0, history.Count-2));
-            }
-
-            Dictionary<Symbol, int> translate = new Dictionary<Symbol, int>() {
-                {Symbol.ZERO, 0 },
-                {Symbol.ONE, 1 },
-                {Symbol.TWO, 2 },
-                {Symbol.THREE, 3 },
-                {Symbol.FOUR, 4 },
-                {Symbol.FIVE, 5 },
-                {Symbol.SIX , 6 },
-                {Symbol.SEVEN, 7 },
-                {Symbol.EIGHT, 8 },
-                {Symbol.NINE, 9 }
-            };
-
             double n = expression.Aggregate(
-                0,
-                (result, symbol) => result * 10 + translate[symbol]
+                (double)0.0,
+                (result, symbol) => result * (double)10.0 + translateSymbolToInteger[symbol]
             );
-
             return new Calculation(
                 new List<ICalculation>(),
                 x => n

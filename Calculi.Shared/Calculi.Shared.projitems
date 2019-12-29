@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Source\CalculatorIO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Source\helpers\Converters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Source\helpers\Utilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Source\ICalculatorIO.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Source\helpers\" />

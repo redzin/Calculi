@@ -16,21 +16,18 @@ using Android.Views;
 using PopupMenu = Android.Support.V7.Widget.PopupMenu;
 
 using System.Linq;
+using System;
 
 /* TODO
- * 
- * Refactor into more readable code, more files?
- * Refactor on-click bindings to methods
- * Refactor computation to happen only ever through one main-activity method, implement exception handling
- * Implement config for calculator class
- * Refactor layout file names
+ * Fix bug where decimal point is not computed correct for e.g. "2.02"
+ * Fix conversion of big doubles to string (e.g. "1.62E32" doesn't convert when getting result from history)
  * Fix ANS button
+ * Write/fix tests
  */
 
 /*
 TODO:
     * Add "sneak peak" calculation area
-    * Format ui history elements properly and make them clickable
     * Swipe for constants/functions
     * Dark mode / other themes / transparent?
     * Landscape mode?
@@ -60,7 +57,7 @@ namespace Calculi
 
         RecyclerView historyRecyclerView;
         RecyclerView.LayoutManager historyLayoutManager;
-        ICalculatorIOHistoryAdapter historyAdapter;
+        CalculationHistoryAdapter historyAdapter;
         
         EditText input;
         FrameLayout inputFrameLayout;
@@ -72,60 +69,49 @@ namespace Calculi
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            calculatorIO = new Shared.CalculatorIO();
-            this.symbolToStringConverter = ConverterFactories.GetSymbolToStringConverter(this.Resources);
-            this.stringToSymbolConverter = ConverterFactories.GetStringToSymbolConverter(this.Resources);
-            this.expressionToStringConverter = ConverterFactories.GetExpressionToStringConverter(symbolToStringConverter);
-            this.expressionToCalculationConverter = ConverterFactories.GetExpressionToICalculationConverter(calculatorIO);
-            this.calculationToDoubleConverter = ConverterFactories.GetCalculationToDoubleConverter();
-            this.calculationToExpressionConverter = ConverterFactories.GetCalculationToExpressionConverter();
+            InitiateCalculatorIO();
+            InitiateHistoryDropdownFunctionality();
+            BindUIButtons();
+            UpdateInputView(calculatorIO);
 
-            historyRecyclerView = FindViewById<RecyclerView>(Resource.Id.HistoryRecyclerView);
-            historyLayoutManager = new LinearLayoutManager(this)
+        }
+        public int GetIndexForEditView()
+        {
+            return calculatorIO.currentExpression
+                .Take(calculatorIO.position)
+                .Select(s => symbolToStringConverter.Convert(s).Length)
+                .Sum();
+        }
+        public void SetIndexFromViewPosition(int viewIndex)
+        {
+            int i = 0;
+            while (calculatorIO.currentExpression.Take(i).Select(s => symbolToStringConverter.Convert(s).Length).Sum() < viewIndex)
             {
-                StackFromEnd = true,
-                ReverseLayout = false
-            };
-            historyAdapter = new ICalculatorIOHistoryAdapter(
-                    calculatorIO,
-                    calculationToDoubleConverter,
-                    expressionToCalculationConverter,
-                    expressionToStringConverter
-                );
-
-            historyRecyclerView.SetAdapter(historyAdapter);
-            historyRecyclerView.SetLayoutManager(historyLayoutManager);
-
-            historyAdapter.ItemClick += (sender, position) =>
+                ++i;
+            }
+            calculatorIO.position = i;
+        }
+        private void SetSelectionFromTouchEvent(Android.Views.View.TouchEventArgs e)
+        {
+            float x = e.Event.RawX;
+            float y = e.Event.RawY;
+            Android.Text.Layout layout = input.Layout;
+            int offset = layout.GetOffsetForHorizontal(0, x);
+            if (offset >= 0)
             {
-
-                View historyEntry = historyLayoutManager.GetChildAt(position);
-                PopupMenu popupmenu = new PopupMenu(this, historyEntry);
-                popupmenu.Inflate(Resource.Layout.history_click);
-                popupmenu.Gravity = (int)GravityFlags.Right;
-
-                popupmenu.MenuItemClick += (sender2, e) =>
-                {
-                    switch (e.Item.ItemId)
-                    {
-                        case Resource.Id.historyGetResult:
-                            double result = calculationToDoubleConverter.Convert(expressionToCalculationConverter.Convert(calculatorIO.GetHistory(position)));
-                            result.ToString().ToList().Select(s => stringToSymbolConverter.Convert(s.ToString())).ToList().ForEach(s => calculatorIO.InsertSymbol(s));
-                            UpdateInputView(calculatorIO);
-                            break;
-                        case Resource.Id.historyGetExpression:
-                            calculatorIO
-                                .GetHistory(position).ToList()
-                                .ForEach(s => calculatorIO.InsertSymbol(s));
-                            UpdateInputView(calculatorIO);
-                            break;
-                        default:
-                            break;
-                    }
-                };
-
-                popupmenu.Show();
-            };
+                SetIndexFromViewPosition(offset);
+                UpdateInputView(calculatorIO);
+            }
+        }
+        private void UpdateInputView(ICalculatorIO io)
+        {
+            input.Text = this.expressionToStringConverter.Convert(io.currentExpression);
+            input.RequestFocus();
+            input.SetSelection(GetIndexForEditView());
+            historyLayoutManager.ScrollToPosition(io.GetHistory().Count-1);
+        }
+        private void BindUIButtons()
+        {
 
             input = FindViewById<EditText>(Resource.Id.Input);
             inputFrameLayout = FindViewById<FrameLayout>(Resource.Id.InputFrameLayout);
@@ -174,7 +160,6 @@ namespace Calculi
             {
                 SetSelectionFromTouchEvent(e);
             };
-
 
             buttonZero.Click += (sender, e) =>
             {
@@ -279,7 +264,7 @@ namespace Calculi
                 calculatorIO.InsertSymbol(Symbol.SQR);
                 UpdateInputView(calculatorIO);
             };
-            
+
             buttonLogarithm.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.LOGARITHM);
@@ -389,45 +374,76 @@ namespace Calculi
                 UpdateInputView(calculatorIO);
             };
 
-            UpdateInputView(calculatorIO);
+        }
+        private void InitiateCalculatorIO()
+        {
+            calculatorIO = new Shared.CalculatorIO();
+            this.symbolToStringConverter = ConverterFactory.GetSymbolToStringConverter(this.Resources);
+            this.stringToSymbolConverter = ConverterFactory.GetStringToSymbolConverter(this.Resources);
+            this.expressionToStringConverter = ConverterFactory.GetExpressionToStringConverter(symbolToStringConverter);
+            this.expressionToCalculationConverter = ConverterFactory.GetExpressionToICalculationConverter(calculatorIO);
+            this.calculationToDoubleConverter = ConverterFactory.GetICalculationToDoubleConverter();
+            this.calculationToExpressionConverter = ConverterFactory.GetICalculationToExpressionConverter();
+        }
+        private void InitiateHistoryDropdownFunctionality()
+        {
+            historyRecyclerView = FindViewById<RecyclerView>(Resource.Id.HistoryRecyclerView);
+            historyLayoutManager = new LinearLayoutManager(this)
+            {
+                StackFromEnd = true,
+                ReverseLayout = false
+            };
+            historyAdapter = new CalculationHistoryAdapter(
+                    calculatorIO,
+                    calculationToDoubleConverter,
+                    expressionToCalculationConverter,
+                    expressionToStringConverter
+                );
 
-        }
-        public int GetIndexForEditView()
-        {
-            return calculatorIO.currentExpression
-                .Take(calculatorIO.position)
-                .Select(s => symbolToStringConverter.Convert(s).Length)
-                .Sum();
-        }
-        public void SetIndexFromViewPosition(int viewIndex)
-        {
-            int i = 0;
-            while (calculatorIO.currentExpression.Take(i).Select(s => symbolToStringConverter.Convert(s).Length).Sum() < viewIndex)
+            historyRecyclerView.SetAdapter(historyAdapter);
+            historyRecyclerView.SetLayoutManager(historyLayoutManager);
+
+            historyAdapter.ItemClick += (sender, position) =>
             {
-                ++i;
-            }
-            calculatorIO.position = i;
+
+                View historyEntry = historyLayoutManager.GetChildAt(position);
+                PopupMenu popupmenu = new PopupMenu(this, historyEntry);
+                popupmenu.Inflate(Resource.Layout.history_click);
+                popupmenu.Gravity = (int)GravityFlags.Right;
+
+                popupmenu.MenuItemClick += (sender2, e) =>
+                {
+                    switch (e.Item.ItemId)
+                    {
+                        case Resource.Id.historyGetResult:
+                            try
+                            {
+                                double result = calculationToDoubleConverter.Convert(expressionToCalculationConverter.Convert(calculatorIO.GetHistory(position)));
+                                result
+                                    .ToString().ToList()
+                                    .Select(s => stringToSymbolConverter.Convert(s.ToString())).ToList()
+                                    .ForEach(s => calculatorIO.InsertSymbol(s));
+                            }
+                            catch (Exception excptn)
+                            {
+
+                            }
+                            UpdateInputView(calculatorIO);
+                            break;
+                        case Resource.Id.historyGetExpression:
+                            calculatorIO.GetHistory(position).ToList().ForEach(s => calculatorIO.InsertSymbol(s));
+                            UpdateInputView(calculatorIO);
+                            break;
+                        default:
+                            break;
+                    }
+                };
+
+                popupmenu.Show();
+            };
         }
-        private void SetSelectionFromTouchEvent(Android.Views.View.TouchEventArgs e)
-        {
-            float x = e.Event.RawX;
-            float y = e.Event.RawY;
-            Android.Text.Layout layout = input.Layout;
-            int offset = layout.GetOffsetForHorizontal(0, x);
-            if (offset >= 0)
-            {
-                SetIndexFromViewPosition(offset);
-                UpdateInputView(calculatorIO);
-            }
-        }
-        private void UpdateInputView(ICalculatorIO io)
-        {
-            input.Text = this.expressionToStringConverter.Convert(io.currentExpression);
-            input.RequestFocus();
-            input.SetSelection(GetIndexForEditView());
-            historyLayoutManager.ScrollToPosition(io.GetHistory().Count-1);
-        }
-        
+
+
         //public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         //{
         //    Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

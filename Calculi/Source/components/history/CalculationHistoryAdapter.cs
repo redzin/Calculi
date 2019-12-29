@@ -31,7 +31,7 @@ TODO:
 
 namespace Calculi
 {
-    public class ICalculatorIOHistoryAdapter : RecyclerView.Adapter
+    public class CalculationHistoryAdapter : RecyclerView.Adapter
     {
         IConverter<ICalculation, double> calculationToDoubleConverter;
         IConverter<IExpression, ICalculation> expressionToICalculationConverter;
@@ -46,7 +46,7 @@ namespace Calculi
         {
                 ItemClick(this, position);
         }
-        internal ICalculatorIOHistoryAdapter(
+        internal CalculationHistoryAdapter(
                 ICalculatorIO calculator,
                 IConverter<ICalculation, double> calculationToDoubleConverter,
                 IConverter<IExpression, ICalculation> expressionToICalculationConverter,
@@ -68,10 +68,16 @@ namespace Calculi
         {
             CalculationHistoryViewHolder vh = holder as CalculationHistoryViewHolder;
             IExpression expr = calculator.GetHistory(position);
-            ICalculation calc = expressionToICalculationConverter.Convert(expr);
-            double result = calculationToDoubleConverter.Convert(calc);
-            vh.calculationResult.Text = result.ToString();
-            vh.calculationExpression.Text = expressionToStringConverter.Convert(calculator.GetHistory(position));
+            try
+            {
+                vh.calculationResult.Text = calculationToDoubleConverter.Convert(expressionToICalculationConverter.Convert(expr)).ToString();
+                vh.calculationExpression.Text = expressionToStringConverter.Convert(expr);
+            }
+            catch (Exception e)
+            {
+                vh.calculationResult.Text = "Error";
+                vh.calculationExpression.Text = "Error";
+            }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

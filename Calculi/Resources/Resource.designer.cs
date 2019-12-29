@@ -3352,13 +3352,13 @@ namespace Calculi
 			public const int design_snackbar_background = 2131165281;
 			
 			// aapt resource value: 0x7F070062
-			public const int emptyRectangle = 2131165282;
+			public const int empty_rectangle = 2131165282;
 			
 			// aapt resource value: 0x7F070063
-			public const int historyClickBackground = 2131165283;
+			public const int history_click_background = 2131165283;
 			
 			// aapt resource value: 0x7F070064
-			public const int historyEntryBackground = 2131165284;
+			public const int history_entry_background = 2131165284;
 			
 			// aapt resource value: 0x7F070065
 			public const int ic_mtrl_chip_checked_black = 2131165285;
