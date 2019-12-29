@@ -18,22 +18,6 @@ using PopupMenu = Android.Support.V7.Widget.PopupMenu;
 using System.Linq;
 using System;
 
-/* TODO
- * Fix ANS button
- * Rework how large numbers work; introduce an "exponent" operator E, e.g. "1.2E16"
- * Write/fix tests
- */
-
-/*
-TODO:
-    * Revamp design and add "sneak peak" calculation area
-    * Swipe for constants/functions
-    * Dark mode / other themes / transparent?
-    * Landscape mode?
-    * Make homescreen logo
-    * Upload to google app store
-*/
-
 namespace Calculi
 {
     [Activity(
