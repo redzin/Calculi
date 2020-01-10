@@ -8,19 +8,19 @@ namespace Calculi.Shared
 {
     class CalculatorIO : ICalculatorIO
     {
-        private ObservableCollection<IExpression> history;
+        private ObservableCollection<HistoryEntry> history;
         public Expression currentExpression { get; set; }
         public int position { get; set; }
         public CalculatorIO()
         {
-            history = new ObservableCollection<IExpression>();
+            history = new ObservableCollection<HistoryEntry>();
             currentExpression = new Expression();
         }
-        public List<IExpression> GetHistory()
+        public List<HistoryEntry> GetHistory()
         {
             return history.ToList();
         }
-        public IExpression GetHistory(int i)
+        public HistoryEntry GetHistoryEntry(int i)
         {
             return history[i];
         }
@@ -58,9 +58,9 @@ namespace Calculi.Shared
             currentExpression = new Expression();
             position = 0;
         }
-        public void MoveInputToHistory()
+        public void MoveInputToHistory(ICalculation result)
         {
-            history.Add(currentExpression);
+            history.Add(new HistoryEntry(currentExpression, result));
             ClearInput();
         }
     }

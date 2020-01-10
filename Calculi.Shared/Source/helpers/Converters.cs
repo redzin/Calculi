@@ -14,7 +14,7 @@ namespace Calculi.Shared.Converters
     {
         public double Convert(ICalculation calculation)
         {
-            return calculation.Function(calculation.children.Select(c => Convert(c)).ToList());
+            return calculation.Function(calculation.Children.Select(c => Convert(c)).ToList());
         }
     }
     internal class ICalculationToIExpressionConverter : IConverter<ICalculation, IExpression>
@@ -117,11 +117,11 @@ namespace Calculi.Shared.Converters
 
             }
         }
-        private ICalculation ParseExpression(IExpression expression, List<IExpression> history)
+        private ICalculation ParseExpression(IExpression expression, List<HistoryEntry> history)
         {
             return ParseTerms(expression, history);
         }
-        private ICalculation ParseTerms(IExpression expression, List<IExpression> history)
+        private ICalculation ParseTerms(IExpression expression, List<HistoryEntry> history)
         {
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.ADD }, { Symbol.SUBTRACT } }, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
@@ -151,7 +151,7 @@ namespace Calculi.Shared.Converters
             }
             return ParseFactor(expression, history);
         }
-        private ICalculation ParseFactor(IExpression expression, List<IExpression> history)
+        private ICalculation ParseFactor(IExpression expression, List<HistoryEntry> history)
         {
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.MULTIPLY }, { Symbol.MODULO }, { Symbol.POWER }, { Symbol.SQR } }, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
@@ -190,7 +190,7 @@ namespace Calculi.Shared.Converters
             }
             return ParseDivision(expression, history);
         }
-        private ICalculation ParseDivision(IExpression expression, List<IExpression> history)
+        private ICalculation ParseDivision(IExpression expression, List<HistoryEntry> history)
         {
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.DIVIDE } }, false);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
@@ -210,7 +210,7 @@ namespace Calculi.Shared.Converters
             }
             return ParseParenthsis(expression, history);
         }
-        private ICalculation ParseParenthsis(IExpression expression, List<IExpression> history)
+        private ICalculation ParseParenthsis(IExpression expression, List<HistoryEntry> history)
         {
             Symbol operation = expression.Count > 0 ? expression.First() : Symbol.EOF;
             switch (operation)
@@ -243,7 +243,7 @@ namespace Calculi.Shared.Converters
             }
             return ParsePoint(expression, history);
         }
-        private ICalculation ParseParenthesisHelper(IExpression expression, List<IExpression> history, Func<List<double>, double> function)
+        private ICalculation ParseParenthesisHelper(IExpression expression, List<HistoryEntry> history, Func<List<double>, double> function)
         {
             if (!expression.Last().Equals(Symbol.RIGHT_PARENTHESIS)) throw new Exception("Malformed brackets!");
             return new Calculation(
@@ -251,9 +251,9 @@ namespace Calculi.Shared.Converters
                 function
             );
         }
-        private ICalculation ParsePoint(IExpression expression, List<IExpression> history)
+        private ICalculation ParsePoint(IExpression expression, List<HistoryEntry> history)
         {
-            Symbol operation = expression.ToList().Find(symbol => symbol.Equals(Symbol.POINT));
+            Symbol operation = expression.ToList().Find(symbol => symbol.Equals(Symbol.POINT) || symbol.Equals(Symbol.ANSWER));
             switch (operation)
             {
                 case Symbol.POINT:
@@ -269,12 +269,14 @@ namespace Calculi.Shared.Converters
                         },
                         a => a[0] + (a[1] / Math.Pow(10, (rhs.Count)))
                     );
+                case Symbol.ANSWER:
+                    return history.Last().Calculation;
                 default:
                     break;
             }
             return ParseInteger(expression, history);
         }
-        private ICalculation ParseInteger(IExpression expression, List<IExpression> history)
+        private ICalculation ParseInteger(IExpression expression, List<HistoryEntry> history)
         {
             double n = expression.Aggregate(
                 (double)0.0,
@@ -285,20 +287,6 @@ namespace Calculi.Shared.Converters
                 x => n
             );
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
     internal class IExpressionToStringConverter : IConverter<IExpression, string>

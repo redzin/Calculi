@@ -354,7 +354,7 @@ namespace Calculi
             buttonEnter.Click += (sender, e) =>
             {
                 historyAdapter.NotifyItemInserted(0);
-                calculatorIO.MoveInputToHistory();
+                calculatorIO.MoveInputToHistory(expressionToCalculationConverter.Convert(calculatorIO.currentExpression));
                 UpdateInputView(calculatorIO);
             };
 
@@ -390,11 +390,8 @@ namespace Calculi
 
             historyAdapter.ItemClick += (sender, position) =>
             {
-
                 View historyEntry = historyLayoutManager.GetChildAt(position);
                 PopupMenu popupmenu = new PopupMenu(this, historyEntry);
-                popupmenu.Inflate(Resource.Layout.history_click);
-                popupmenu.Gravity = (int)GravityFlags.Right;
 
                 popupmenu.MenuItemClick += (sender2, e) =>
                 {
@@ -403,8 +400,7 @@ namespace Calculi
                         case Resource.Id.historyGetResult:
                             try
                             {
-                                double result = calculationToDoubleConverter.Convert(expressionToCalculationConverter.Convert(calculatorIO.GetHistory(position)));
-                                stringToExpressionConverter.Convert(result.ToString()).ToList().ForEach(s => calculatorIO.InsertSymbol(s));
+                                calculatorIO.GetHistoryEntry(position).Calculation.CollapseToExpression().ToList().ForEach(s => calculatorIO.InsertSymbol(s));
                             }
                             catch (Exception excptn)
                             {
@@ -413,7 +409,7 @@ namespace Calculi
                             UpdateInputView(calculatorIO);
                             break;
                         case Resource.Id.historyGetExpression:
-                            calculatorIO.GetHistory(position).ToList().ForEach(s => calculatorIO.InsertSymbol(s));
+                            calculatorIO.GetHistoryEntry(position).Expression.ToList().ForEach(s => calculatorIO.InsertSymbol(s));
                             UpdateInputView(calculatorIO);
                             break;
                         default:
@@ -421,6 +417,8 @@ namespace Calculi
                     }
                 };
 
+                popupmenu.Inflate(Resource.Layout.history_click);
+                popupmenu.Gravity = (int)GravityFlags.Right;
                 popupmenu.Show();
             };
         }

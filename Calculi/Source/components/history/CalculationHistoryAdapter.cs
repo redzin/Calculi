@@ -67,11 +67,11 @@ namespace Calculi
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             CalculationHistoryViewHolder vh = holder as CalculationHistoryViewHolder;
-            IExpression expr = calculator.GetHistory(position);
+            HistoryEntry historyEntry = calculator.GetHistoryEntry(position);
             try
             {
-                vh.calculationResult.Text = calculationToDoubleConverter.Convert(expressionToICalculationConverter.Convert(expr)).ToString();
-                vh.calculationExpression.Text = expressionToStringConverter.Convert(expr);
+                vh.calculationResult.Text = calculationToDoubleConverter.Convert(historyEntry.Calculation).ToString();
+                vh.calculationExpression.Text = expressionToStringConverter.Convert(historyEntry.Expression);
             }
             catch (Exception e)
             {
