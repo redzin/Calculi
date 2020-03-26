@@ -42,12 +42,18 @@
     <!--<item name="android:background">@drawable/textlines</item>-->
   </style>
 
-  <style name="AppTheme.InputText">
+  <style name="AppTheme.InputTextPreview">
     <item name="android:textSize">24dp</item>
+    <item name="android:textColor">@color/colorInputTextPreview</item>
+    <item name="android:gravity">right|center</item>
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:maxLines">1</item>
+  </style>
+  
+  <style name="AppTheme.InputText">
+    <item name="android:textSize">32dp</item>
     <item name="android:textColor">@color/colorInputText</item>
     <item name="android:gravity">left|center</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">30dp</item>
     <item name="android:text">@string/initInputString</item>
     <item name="android:background">@android:color/transparent</item>
     <item name="android:maxLines">1</item>

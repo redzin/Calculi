@@ -28,6 +28,8 @@
   <color name="colorBackground">#efefef</color>
   <color name="colorLines">#dddddd</color>
 
+  <color name="colorHistoryEntryText">#666666</color>
+  <color name="colorInputTextPreview">#666666</color>
   <color name="colorInputText">#333333</color>
   <color name="colorOutputText">#9c9c9c</color>
 

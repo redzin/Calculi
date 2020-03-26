@@ -4,10 +4,10 @@ using System;
 using Calculi.Shared;
 using Calculi.Shared.Converters;
 
-using Android.Support.V7.Widget;
 using Android.Views;
 
 using System.Linq;
+using Android.Support.V7.Widget;
 
 /* TODO
  * 

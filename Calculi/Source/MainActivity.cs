@@ -42,7 +42,8 @@ namespace Calculi
         RecyclerView historyRecyclerView;
         RecyclerView.LayoutManager historyLayoutManager;
         CalculationHistoryAdapter historyAdapter;
-        
+
+        TextView inputPreview;
         EditText input;
         FrameLayout inputFrameLayout;
 
@@ -93,10 +94,16 @@ namespace Calculi
             input.RequestFocus();
             input.SetSelection(GetIndexForEditView());
             historyLayoutManager.ScrollToPosition(io.GetHistory().Count-1);
+            UpdateInputPreviewView(io);
+        }
+        private void UpdateInputPreviewView(ICalculatorIO io)
+        {
+            inputPreview.Text = this.calculationToDoubleConverter.Convert(this.expressionToCalculationConverter.Convert(io.currentExpression)).ToString();
         }
         private void BindUIButtons()
         {
 
+            inputPreview = FindViewById<TextView>(Resource.Id.InputPreview);
             input = FindViewById<EditText>(Resource.Id.Input);
             inputFrameLayout = FindViewById<FrameLayout>(Resource.Id.InputFrameLayout);
 
@@ -207,6 +214,10 @@ namespace Calculi
 
             buttonAdd.Click += (sender, e) =>
             {
+                if (calculatorIO.currentExpression.Count == 0)
+                {
+                    calculatorIO.InsertSymbol(Symbol.ANSWER);
+                }
                 calculatorIO.InsertSymbol(Symbol.ADD);
                 UpdateInputView(calculatorIO);
             };
@@ -390,7 +401,7 @@ namespace Calculi
 
             historyAdapter.ItemClick += (sender, position) =>
             {
-                View historyEntry = historyLayoutManager.GetChildAt(position);
+                View historyEntry = historyLayoutManager.FindViewByPosition(position);
                 PopupMenu popupmenu = new PopupMenu(this, historyEntry);
 
                 popupmenu.MenuItemClick += (sender2, e) =>
