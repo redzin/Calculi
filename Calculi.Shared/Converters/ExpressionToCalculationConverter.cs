@@ -1,4 +1,4 @@
-﻿using Calculi.Shared.Utilities;
+﻿using Calculi.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,24 +6,6 @@ using System.Text;
 
 namespace Calculi.Shared.Converters
 {
-    internal interface IConverter<TSource, TDestination>
-    {
-        TDestination Convert(TSource source_object);
-    }
-    internal class ICalculationToDoubleConverter : IConverter<ICalculation, double>
-    {
-        public double Convert(ICalculation calculation)
-        {
-            return calculation.Function(calculation.Children.Select(c => Convert(c)).ToList());
-        }
-    }
-    internal class ICalculationToIExpressionConverter : IConverter<ICalculation, IExpression>
-    {
-        public IExpression Convert(ICalculation source_object)
-        {
-            throw new NotImplementedException("Converting calculation to expression should never happen.");
-        }
-    }
     internal class IExpressionToICalculationConverter : IConverter<IExpression, ICalculation>
     {
         private ICalculatorIO calculatorIO;
@@ -47,7 +29,7 @@ namespace Calculi.Shared.Converters
         }
         public ICalculation Convert(IExpression expression)
         {
-            return ParseExpression(expression, calculatorIO.GetHistory());
+            return ParseExpression(expression, calculatorIO.history.ToList());
         }
 
         private List<int> MarkScope(IExpression expression)
@@ -123,18 +105,22 @@ namespace Calculi.Shared.Converters
         }
         private ICalculation ParseTerms(IExpression expression, List<HistoryEntry> history)
         {
+            if (expression.Count == 0)
+            {
+                throw new Exception("Invalid expression");
+            }
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.ADD }, { Symbol.SUBTRACT } }, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
             switch (operation)
             {
                 case Symbol.ADD:
-                    return new Calculation(
-                            new List<ICalculation>() {
-                                ParseTerms(expression.Where((symbol, index) => index < symbolIndex).ToExpression(), history),
-                                ParseTerms(expression.Where((symbol, index) => index > symbolIndex).ToExpression(), history)
-                            },
-                            (a) => a[0] + a[1]
-                        );
+                    IExpression leftChild = expression.Where((symbol, index) => index < symbolIndex).ToExpression();
+                    IExpression rightChild = expression.Where((symbol, index) => index > symbolIndex).ToExpression();
+                    List<ICalculation> list = new List<ICalculation>() {
+                                ParseTerms(leftChild, history),
+                                ParseTerms(rightChild, history)
+                            };
+                    return new Calculation(list, (a) => a[0] + a[1]);
                 case Symbol.SUBTRACT:
                     IExpression lhs = expression.Where((symbol, index) => index < symbolIndex).ToExpression();
                     lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>(){ Symbol.ZERO }) ;
@@ -153,6 +139,10 @@ namespace Calculi.Shared.Converters
         }
         private ICalculation ParseFactor(IExpression expression, List<HistoryEntry> history)
         {
+            if (expression.Count == 0)
+            {
+                throw new Exception("Invalid expression");
+            }
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.MULTIPLY }, { Symbol.MODULO }, { Symbol.POWER }, { Symbol.SQR } }, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
 
@@ -192,6 +182,10 @@ namespace Calculi.Shared.Converters
         }
         private ICalculation ParseDivision(IExpression expression, List<HistoryEntry> history)
         {
+            if (expression.Count == 0)
+            {
+                throw new Exception("Invalid expression");
+            }
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.DIVIDE } }, false);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
 
@@ -245,7 +239,13 @@ namespace Calculi.Shared.Converters
         }
         private ICalculation ParseParenthesisHelper(IExpression expression, List<HistoryEntry> history, Func<List<double>, double> function)
         {
-            if (!expression.Last().Equals(Symbol.RIGHT_PARENTHESIS)) throw new Exception("Malformed brackets!");
+
+            if (expression.Count < 3
+                || !expression.Last().Equals(Symbol.RIGHT_PARENTHESIS)
+            )
+            {
+                throw new Exception("Invalid expression");
+            }
             return new Calculation(
                 new List<ICalculation>() { ParseExpression(expression.Where((symbol, index) => index != 0 && index != expression.Count - 1).ToExpression(), history) },
                 function
@@ -258,8 +258,12 @@ namespace Calculi.Shared.Converters
             {
                 case Symbol.POINT:
                     IExpression lhs = expression.TakeWhile(symbol => !symbol.Equals(Symbol.POINT)).ToExpression();
-                    lhs = lhs.Count > 0 ? lhs : new Expression() { Symbol.ZERO };
                     IExpression rhs = expression.SkipWhile(symbol => !symbol.Equals(Symbol.POINT)).Skip(1).ToExpression();
+                    if (lhs.Count == 0 && rhs.Count == 0)
+                    {
+                        throw new Exception("Invalid expression");
+                    }
+                    lhs = lhs.Count > 0 ? lhs : new Expression() { Symbol.ZERO };
                     rhs = rhs.Count > 0 ? rhs : new Expression() { Symbol.ZERO };
                     return new Calculation(
                         new List<ICalculation>()
@@ -287,122 +291,7 @@ namespace Calculi.Shared.Converters
                 x => n
             );
         }
-    }
-    internal class IExpressionToStringConverter : IConverter<IExpression, string>
-    {
-        IConverter<Symbol, string> symbolToStringConverter;
-        public IExpressionToStringConverter(IConverter<Symbol, string> symbolToStringConverter)
-        {
-            this.symbolToStringConverter = symbolToStringConverter;
-        }
-        public string Convert(IExpression expression)
-        {
-            return expression.Aggregate("", (result, symbol) => result + symbolToStringConverter.Convert(symbol));
-        }
-    }
-    internal class SymbolToStringConverter : IConverter<Symbol, string>
-    {
-        private Dictionary<Symbol, string> translate;
-        public SymbolToStringConverter()
-        {
-            translate = new Dictionary<Symbol, string>() {
-                {Symbol.ZERO, ""},
-                {Symbol.ONE, ""},
-                {Symbol.TWO, ""},
-                {Symbol.THREE, ""},
-                {Symbol.FOUR, ""},
-                {Symbol.FIVE, ""},
-                {Symbol.SIX, ""},
-                {Symbol.SEVEN, ""},
-                {Symbol.EIGHT, ""},
-                {Symbol.NINE, ""},
-                {Symbol.POINT, ""},
-                {Symbol.LEFT_PARENTHESIS, ""},
-                {Symbol.RIGHT_PARENTHESIS, ""},
-                {Symbol.ADD, ""},
-                {Symbol.SUBTRACT, ""},
-                {Symbol.MULTIPLY, ""},
-                {Symbol.DIVIDE, ""},
-                {Symbol.MODULO, ""},
-                {Symbol.EXP, ""},
-                {Symbol.POWER, ""},
-                {Symbol.SQR, ""},
-                {Symbol.SQRT, ""},
-                {Symbol.LOGARITHM, ""},
-                {Symbol.NATURAL_LOGARITHM, ""},
-                {Symbol.ANSWER, ""},
-                {Symbol.SINE, ""},
-                {Symbol.COSINE, ""},
-                {Symbol.TANGENT, ""},
-                {Symbol.SECANT, ""},
-                {Symbol.COSECANT, ""},
-                {Symbol.COTANGENT, ""}
-            };
-        }
-        public SymbolToStringConverter(Dictionary<Symbol, string> translate)
-        {
-            this.translate = translate;
-        }
-        public string Convert(Symbol symbol)
-        {
-            return translate[symbol];
-        }
-    }
-    internal class StringToSymbolConverter : IConverter<string, Symbol>
-    {
-        private Dictionary<string, Symbol> translate;
-        public StringToSymbolConverter()
-        {
-            translate = new Dictionary<string, Symbol>()
-            {
-                {"0", Symbol.ZERO },
-                {"1", Symbol.ONE },
-                {"2", Symbol.TWO },
-                {"3", Symbol.THREE },
-                {"4", Symbol.FOUR },
-                {"5", Symbol.FIVE },
-                {"6", Symbol.SIX },
-                {"7", Symbol.SEVEN },
-                {"8", Symbol.EIGHT },
-                {"9", Symbol.NINE },
-                {".", Symbol.POINT },
-                {"-", Symbol.SUBTRACT }
-            };
-        }
-        public StringToSymbolConverter(Dictionary<string, Symbol> translate)
-        {
-            this.translate = translate;
-        }
-        public Symbol Convert(string source_string)
-        {
-            return translate[source_string];
-        }
-    }
-    internal class StringToIExpressionConverter : IConverter<string, IExpression>
-    {
-        private IConverter<string, Symbol> stringToSymbolConverter;
-        public StringToIExpressionConverter(IConverter<string, Symbol> stringToSymbolConverter)
-        {
-            this.stringToSymbolConverter = stringToSymbolConverter;
-        }
-        public IExpression Convert(string source_string)
-        {
-            IExpression expr = new Expression();
-            string extraZeroes = "";
-            string baseValue = source_string.ToList().TakeWhile(c => c != 'E').ToList().Aggregate("", (result, c) => result + c);
-            if (source_string.ToList().Exists(c => c == 'E'))
-            {
-                double exponent = System.Convert.ToDouble(source_string.SkipWhile(c => c != 'E').Skip(2).ToList().Aggregate("", (result, c) => result + c));
-                double numDecimals = baseValue.SkipWhile(c => c != '.').Skip(1).Count();
-                double numZeroes = exponent - numDecimals;
-                for (int i = 0; i < numZeroes; i++)
-                {
-                    extraZeroes += "0";
-                }
-                baseValue = baseValue.Split(".").Aggregate("", (result, c) => result + c);
-            }
-            return (baseValue + extraZeroes).ToList().Select(s => stringToSymbolConverter.Convert(s.ToString())).ToExpression();
-        }
+
     }
 
 }

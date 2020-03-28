@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">#fafafa</color>
+  <color name="colorPrimaryDark">#333333</color>
+  <color name="colorPrimaryText">#666666</color>
+  <color name="colorSecondaryText">#555555</color>
+  <color name="colorTertiaryText">#555555</color>
+  <color name="colorText">#555555</color>
+  <color name="colorAccent">#2189f9</color>
+  
+  <color name="colorBackground">#fafafa</color>
+  <color name="colorLines">#dddddd</color>
+
+  <color name="colorHistoryEntryText">#666666</color>
+  <color name="colorInputTextPreview">#666666</color>
+  <color name="colorInputText">#333333</color>
+  <color name="colorOutputText">#9c9c9c</color>
+
+  <color name="colorButtonText">#eeeeee</color>
+  <color name="colorButtonBackground">#f98921</color>
+  
+  <color name="colorButtonBlueText">#eeeeee</color>
+  <color name="colorButtonBlueBackground">#2189f9</color>
+  
+  <color name="colorButtonNumericText">#555555</color>
+  <color name="colorButtonNumericBackground">#eeeeee</color>
+  
+  <color name="colorButtonSpecialText">#555555</color>
+  <color name="colorButtonSpecialBackground">#cccccc</color>
+  
+</resources>
