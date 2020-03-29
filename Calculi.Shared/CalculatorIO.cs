@@ -1,59 +1,101 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
+using Calculi.Shared.Converters;
+using Calculi.Shared.Extensions;
 
 namespace Calculi.Shared
 {
     class CalculatorIO : ICalculatorIO
     {
-        private ObservableCollection<HistoryEntry> _history;
-        public ObservableCollection<HistoryEntry> history { 
+        private ObservableCollection<CalculationResult> _history;
+        public ObservableCollection<CalculationResult> History { 
             get {
                 return _history;
             }
         }
-        public Expression expression { get; set; }
-        public int position { get; set; }
+        public Expression Expression { get; set; }
+        public int Position { get; set; }
         public CalculatorIO()
         {
-            _history = new ObservableCollection<HistoryEntry>();
-            expression = new Expression();
+            _history = new ObservableCollection<CalculationResult>();
+            Expression = new Expression();
         }
         public void IncrementPosition()
         {
-            position = position >= expression.Count ? position : position + 1;
+            Position = Position >= Expression.Count ? Position : Position + 1;
         }
         public void DecrementPosition()
         {
-            position = position <= 0 ? 0 : position - 1;
+            Position = Position <= 0 ? 0 : Position - 1;
         }
         public int GetIndex()
         {
-            return position;
+            return Position;
         }
         public void InsertSymbol(Symbol symbol)
         {
-            expression.Insert(position, symbol);
+            if (symbol.IsLeftParenthsisEquivalent())
+            {
+                if (ExpressionEvaluates(Expression))
+                {
+                    Expression.Insert(Position, symbol);
+                    IncrementPosition();
+                    Expression.Insert(Position, Symbol.RIGHT_PARENTHESIS);
+                    return;
+                }
+                
+                Expression.Insert(Position, symbol);
+                IncrementPosition();
+
+                if (!ExpressionEvaluates(Expression))
+                {
+                    Expression.Insert(Position, Symbol.RIGHT_PARENTHESIS);
+                }
+
+                return;
+            }
+
+            Expression.Insert(Position, symbol);
             IncrementPosition();
+            
         }
         public void RemoveSymbol()
         {
-            if (expression.Count > 0 && position > 0)
+            if (Expression.Count > 0 && Position > 0)
             {
+                bool removedSymbolIsLeftParenthesisEquivalent = Expression[Position - 1].IsLeftParenthsisEquivalent();
                 DecrementPosition();
-                expression.RemoveAt(position);
+                Expression.RemoveAt(Position);
+                if (removedSymbolIsLeftParenthesisEquivalent && Position < Expression.Count && Expression[Position].Equals(Symbol.RIGHT_PARENTHESIS))
+                {
+                    if (!ExpressionEvaluates(Expression))
+                    {
+                        Expression.RemoveAt(Position);
+                    }
+                }
+            }
+        }
+        private bool ExpressionEvaluates(IExpression expression)
+        {
+            try
+            {
+                IExpressionToICalculationConverter converter = new IExpressionToICalculationConverter(this);
+                ICalculation calculation = converter.Convert(expression);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
         public void ClearInput()
         {
-            expression = new Expression();
-            position = 0;
+            Expression = new Expression();
+            Position = 0;
         }
         public void MoveInputToHistory(ICalculation result)
         {
-            history.Add(new HistoryEntry(expression, result));
+            History.Add(new CalculationResult(Expression, result));
             ClearInput();
         }
     }

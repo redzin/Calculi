@@ -25,10 +25,6 @@ namespace Calculi
         {
             return new IExpressionToStringConverter(symbolToStringConverter);
         }
-        internal static IConverter<ICalculation, IExpression> GetICalculationToExpressionConverter()
-        {
-            return new ICalculationToIExpressionConverter();
-        }
         internal static IConverter<ICalculation, double> GetICalculationToDoubleConverter()
         {
             return new ICalculationToDoubleConverter();

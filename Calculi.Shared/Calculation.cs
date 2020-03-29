@@ -7,41 +7,6 @@ using System.Text;
 
 namespace Calculi.Shared
 {
-    public enum Symbol
-    {
-        EOF,
-        ZERO,
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
-        SEVEN,
-        EIGHT,
-        NINE,
-        POINT,
-        LEFT_PARENTHESIS,
-        RIGHT_PARENTHESIS,
-        ADD,
-        SUBTRACT,
-        MULTIPLY,
-        DIVIDE,
-        MODULO,
-        EXP,
-        POWER,
-        SQR,
-        SQRT,
-        LOGARITHM,
-        NATURAL_LOGARITHM,
-        ANSWER,
-        SINE,
-        COSINE,
-        TANGENT,
-        SECANT,
-        COSECANT,
-        COTANGENT
-    }
     public class Calculation : ICalculation
     {
         public List<ICalculation> Children { get; private set; }

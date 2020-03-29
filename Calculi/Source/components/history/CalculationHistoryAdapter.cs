@@ -1,33 +1,8 @@
-﻿
-using System;
-
+﻿using System;
 using Calculi.Shared;
-using Calculi.Shared.Converters;
-
 using Android.Views;
-
 using System.Linq;
 using Android.Support.V7.Widget;
-
-/* TODO
- * 
- * Refactor into more readable code, more files?
- * Refactor on-click bindings to methods
- * Refactor computation to happen only ever through one main-activity method, implement exception handling
- * Implement config for calculator class
- * Refactor layout file names
- */
-
-
-/*
-TODO:
-    * Add "sneak peak" calculation area
-    * Format ui history elements properly and make them clickable
-    * Swipe for constants/functions
-    * Upload to google app store
-    * Dark mode / other themes
-    * Landscape mode?
-*/
 
 namespace Calculi
 {
@@ -40,7 +15,7 @@ namespace Calculi
         private ICalculatorIO calculator;
         public override int ItemCount
         {
-            get { return calculator.GetHistory().Count; }
+            get { return calculator.History.Count; }
         }
         void OnClick(int position)
         {
@@ -58,16 +33,16 @@ namespace Calculi
             this.expressionToStringConverter = expressionToStringConverter;
 
             this.calculator = calculator;
-            calculator.BindToHistoryChange((sender, e) => {
+            calculator.History.CollectionChanged += ((sender, e) => {
                 this.NotifyItemRangeRemoved(0, 1);
-                this.NotifyItemInserted(calculator.GetHistory().Count-1);
+                this.NotifyItemInserted(calculator.History.Count-1);
             });
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             CalculationHistoryViewHolder vh = holder as CalculationHistoryViewHolder;
-            HistoryEntry historyEntry = calculator.GetHistoryEntry(position);
+            CalculationResult historyEntry = calculator.History[position];
             try
             {
                 vh.calculationResult.Text = calculationToDoubleConverter.Convert(historyEntry.Calculation).ToString();

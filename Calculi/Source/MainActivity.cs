@@ -1,14 +1,9 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
-using Android.Runtime;
 using Android.Widget;
-using Android.Views.InputMethods;
-using System.Collections.Generic;
 
 using Calculi.Shared;
-using Calculi.Shared.Converters;
-using Calculi.Shared.Utilities;
 
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -62,19 +57,19 @@ namespace Calculi
         }
         public int GetIndexForEditView()
         {
-            return calculatorIO.currentExpression
-                .Take(calculatorIO.position)
+            return calculatorIO.Expression
+                .Take(calculatorIO.Position)
                 .Select(s => symbolToStringConverter.Convert(s).Length)
                 .Sum();
         }
         public void SetIndexFromViewPosition(int viewIndex)
         {
             int i = 0;
-            while (calculatorIO.currentExpression.Take(i).Select(s => symbolToStringConverter.Convert(s).Length).Sum() < viewIndex)
+            while (calculatorIO.Expression.Take(i).Select(s => symbolToStringConverter.Convert(s).Length).Sum() < viewIndex)
             {
                 ++i;
             }
-            calculatorIO.position = i;
+            calculatorIO.Position = i;
         }
         private void SetSelectionFromTouchEvent(Android.Views.View.TouchEventArgs e)
         {
@@ -90,19 +85,24 @@ namespace Calculi
         }
         private void UpdateInputView(ICalculatorIO io)
         {
-            input.Text = this.expressionToStringConverter.Convert(io.currentExpression);
+            input.Text = this.expressionToStringConverter.Convert(io.Expression);
             input.RequestFocus();
             input.SetSelection(GetIndexForEditView());
-            historyLayoutManager.ScrollToPosition(io.GetHistory().Count-1);
+            historyLayoutManager.ScrollToPosition(io.History.Count-1);
             UpdateInputPreviewView(io);
         }
         private void UpdateInputPreviewView(ICalculatorIO io)
         {
-            inputPreview.Text = this.calculationToDoubleConverter.Convert(this.expressionToCalculationConverter.Convert(io.currentExpression)).ToString();
+            if (io.Expression.Count == 0) {
+                inputPreview.Text = "";
+            } else
+            {
+                CalculationResult result = ExpressionToCalculation(io.Expression);
+                inputPreview.Text = result.Calculation != null ? result.Calculation.ToDouble().ToString() : inputPreview.Text;
+            }
         }
         private void BindUIButtons()
         {
-
             inputPreview = FindViewById<TextView>(Resource.Id.InputPreview);
             input = FindViewById<EditText>(Resource.Id.Input);
             inputFrameLayout = FindViewById<FrameLayout>(Resource.Id.InputFrameLayout);
@@ -214,7 +214,7 @@ namespace Calculi
 
             buttonAdd.Click += (sender, e) =>
             {
-                if (calculatorIO.currentExpression.Count == 0)
+                if (calculatorIO.Expression.Count == 0)
                 {
                     calculatorIO.InsertSymbol(Symbol.ANSWER);
                 }
@@ -249,8 +249,6 @@ namespace Calculi
             buttonSqrt.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.SQRT);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
@@ -263,24 +261,18 @@ namespace Calculi
             buttonLogarithm.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.LOGARITHM);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
             buttonNaturalLogarithm.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.NATURAL_LOGARITHM);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
             buttonExp.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.EXP);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
@@ -293,24 +285,18 @@ namespace Calculi
             buttonSine.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.SINE);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
             buttonCosine.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.COSINE);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
             buttonTangent.Click += (sender, e) =>
             {
                 calculatorIO.InsertSymbol(Symbol.TANGENT);
-                calculatorIO.InsertSymbol(Symbol.RIGHT_PARENTHESIS);
-                calculatorIO.DecrementIndex();
                 UpdateInputView(calculatorIO);
             };
 
@@ -340,13 +326,13 @@ namespace Calculi
 
             buttonLeftArrow.Click += (sender, e) =>
             {
-                calculatorIO.DecrementIndex();
+                calculatorIO.DecrementPosition();
                 UpdateInputView(calculatorIO);
             };
 
             buttonRightArrow.Click += (sender, e) =>
             {
-                calculatorIO.IncrementIndex();
+                calculatorIO.IncrementPosition();
                 UpdateInputView(calculatorIO);
             };
 
@@ -365,7 +351,7 @@ namespace Calculi
             buttonEnter.Click += (sender, e) =>
             {
                 historyAdapter.NotifyItemInserted(0);
-                calculatorIO.MoveInputToHistory(expressionToCalculationConverter.Convert(calculatorIO.currentExpression));
+                calculatorIO.MoveInputToHistory(ExpressionToCalculation(calculatorIO.Expression).Calculation);
                 UpdateInputView(calculatorIO);
             };
 
@@ -379,7 +365,17 @@ namespace Calculi
             this.expressionToStringConverter = ConverterFactory.GetExpressionToStringConverter(symbolToStringConverter);
             this.expressionToCalculationConverter = ConverterFactory.GetExpressionToICalculationConverter(calculatorIO);
             this.calculationToDoubleConverter = ConverterFactory.GetICalculationToDoubleConverter();
-            this.calculationToExpressionConverter = ConverterFactory.GetICalculationToExpressionConverter();
+        }
+        private CalculationResult ExpressionToCalculation (IExpression expression)
+        {
+            try
+            {
+                return new CalculationResult(expression, this.expressionToCalculationConverter.Convert(expression));
+            }
+            catch(Exception e)
+            {
+                return new CalculationResult(expression, null);
+            }
         }
         private void InitiateHistoryDropdownFunctionality()
         {
@@ -411,7 +407,7 @@ namespace Calculi
                         case Resource.Id.historyGetResult:
                             try
                             {
-                                calculatorIO.GetHistoryEntry(position).Calculation.CollapseToExpression().ToList().ForEach(s => calculatorIO.InsertSymbol(s));
+                                calculatorIO.History[position].Calculation.CollapseToExpression().ToList().ForEach(s => calculatorIO.InsertSymbol(s));
                             }
                             catch (Exception excptn)
                             {
@@ -420,7 +416,7 @@ namespace Calculi
                             UpdateInputView(calculatorIO);
                             break;
                         case Resource.Id.historyGetExpression:
-                            calculatorIO.GetHistoryEntry(position).Expression.ToList().ForEach(s => calculatorIO.InsertSymbol(s));
+                            calculatorIO.History[position].Expression.ToList().ForEach(s => calculatorIO.InsertSymbol(s));
                             UpdateInputView(calculatorIO);
                             break;
                         default:

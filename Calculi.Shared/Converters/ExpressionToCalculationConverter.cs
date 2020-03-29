@@ -9,19 +9,6 @@ namespace Calculi.Shared.Converters
     internal class IExpressionToICalculationConverter : IConverter<IExpression, ICalculation>
     {
         private ICalculatorIO calculatorIO;
-        private readonly Dictionary<Symbol, int> translateSymbolToInteger = new Dictionary<Symbol, int>()
-        {
-            {Symbol.ZERO, 0 },
-            {Symbol.ONE, 1 },
-            {Symbol.TWO, 2 },
-            {Symbol.THREE, 3 },
-            {Symbol.FOUR, 4 },
-            {Symbol.FIVE, 5 },
-            {Symbol.SIX , 6 },
-            {Symbol.SEVEN, 7 },
-            {Symbol.EIGHT, 8 },
-            {Symbol.NINE, 9 }
-        };
 
         public IExpressionToICalculationConverter(ICalculatorIO calculatorIO)
         {
@@ -29,7 +16,7 @@ namespace Calculi.Shared.Converters
         }
         public ICalculation Convert(IExpression expression)
         {
-            return ParseExpression(expression, calculatorIO.history.ToList());
+            return ParseExpression(expression, calculatorIO.History.ToList());
         }
 
         private List<int> MarkScope(IExpression expression)
@@ -38,7 +25,7 @@ namespace Calculi.Shared.Converters
             int scope = 0;
             for (int i = 0; i < expression.Count; i++)
             {
-                if (SymbolCountsAsParenthesis(expression[i]))
+                if (expression[i].IsLeftParenthsisEquivalent())
                 {
                     scope++;
                 }
@@ -53,22 +40,6 @@ namespace Calculi.Shared.Converters
                 throw new Exception("Non-matching brackets!");
             }
             return scope_marker;
-        }
-        private bool SymbolCountsAsParenthesis(Symbol s)
-        {
-            bool countsAsParenthesis =
-                s.Equals(Symbol.LOGARITHM) ||
-                s.Equals(Symbol.NATURAL_LOGARITHM) ||
-                s.Equals(Symbol.EXP) ||
-                s.Equals(Symbol.SQRT) ||
-                s.Equals(Symbol.SINE) ||
-                s.Equals(Symbol.COSINE) ||
-                s.Equals(Symbol.TANGENT) ||
-                s.Equals(Symbol.SECANT) ||
-                s.Equals(Symbol.COSECANT) ||
-                s.Equals(Symbol.COTANGENT) ||
-                s.Equals(Symbol.LEFT_PARENTHESIS);
-            return countsAsParenthesis;
         }
         private List<int> GetIndicesOfGlobalOperatorsOfTypes(IExpression expression, List<Symbol> types)
         {
@@ -99,11 +70,11 @@ namespace Calculi.Shared.Converters
 
             }
         }
-        private ICalculation ParseExpression(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParseExpression(IExpression expression, List<CalculationResult> history)
         {
             return ParseTerms(expression, history);
         }
-        private ICalculation ParseTerms(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParseTerms(IExpression expression, List<CalculationResult> history)
         {
             if (expression.Count == 0)
             {
@@ -137,7 +108,7 @@ namespace Calculi.Shared.Converters
             }
             return ParseFactor(expression, history);
         }
-        private ICalculation ParseFactor(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParseFactor(IExpression expression, List<CalculationResult> history)
         {
             if (expression.Count == 0)
             {
@@ -180,7 +151,7 @@ namespace Calculi.Shared.Converters
             }
             return ParseDivision(expression, history);
         }
-        private ICalculation ParseDivision(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParseDivision(IExpression expression, List<CalculationResult> history)
         {
             if (expression.Count == 0)
             {
@@ -204,7 +175,7 @@ namespace Calculi.Shared.Converters
             }
             return ParseParenthsis(expression, history);
         }
-        private ICalculation ParseParenthsis(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParseParenthsis(IExpression expression, List<CalculationResult> history)
         {
             Symbol operation = expression.Count > 0 ? expression.First() : Symbol.EOF;
             switch (operation)
@@ -237,7 +208,7 @@ namespace Calculi.Shared.Converters
             }
             return ParsePoint(expression, history);
         }
-        private ICalculation ParseParenthesisHelper(IExpression expression, List<HistoryEntry> history, Func<List<double>, double> function)
+        private ICalculation ParseParenthesisHelper(IExpression expression, List<CalculationResult> history, Func<List<double>, double> function)
         {
 
             if (expression.Count < 3
@@ -251,7 +222,7 @@ namespace Calculi.Shared.Converters
                 function
             );
         }
-        private ICalculation ParsePoint(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParsePoint(IExpression expression, List<CalculationResult> history)
         {
             Symbol operation = expression.ToList().Find(symbol => symbol.Equals(Symbol.POINT) || symbol.Equals(Symbol.ANSWER));
             switch (operation)
@@ -280,11 +251,11 @@ namespace Calculi.Shared.Converters
             }
             return ParseInteger(expression, history);
         }
-        private ICalculation ParseInteger(IExpression expression, List<HistoryEntry> history)
+        private ICalculation ParseInteger(IExpression expression, List<CalculationResult> history)
         {
             double n = expression.Aggregate(
                 (double)0.0,
-                (result, symbol) => result * (double)10.0 + translateSymbolToInteger[symbol]
+                (result, symbol) => result * (double)10.0 + symbol.ToInt()
             );
             return new Calculation(
                 new List<ICalculation>(),

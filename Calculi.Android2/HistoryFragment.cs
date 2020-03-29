@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Android.App;
 using Android.OS;
+using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 
@@ -22,7 +23,7 @@ namespace Calculi.Android2
 
         public void setText(String text)
         {
-            TextView view = (TextView) this.Activity.FindViewById(Resource.Id.historyText);
+            TextView view = (TextView)this.Activity.FindViewById(Resource.Id.historyText);
             view.Text = text;
         }
     }
