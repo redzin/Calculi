@@ -350,9 +350,13 @@ namespace Calculi
 
             buttonEnter.Click += (sender, e) =>
             {
-                historyAdapter.NotifyItemInserted(0);
-                calculatorIO.MoveInputToHistory(ExpressionToCalculation(calculatorIO.Expression).Calculation);
-                UpdateInputView(calculatorIO);
+                ICalculation calculation = ExpressionToCalculation(calculatorIO.Expression).Calculation;
+                if (calculation != null)
+                {
+                    historyAdapter.NotifyItemInserted(0);
+                    calculatorIO.MoveInputToHistory(calculation);
+                    UpdateInputView(calculatorIO);
+                }
             };
 
         }
