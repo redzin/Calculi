@@ -9,8 +9,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Calculi.Shared;
-using Calculi.Shared.Converters;
+using Calculi.Shared.Deprecated.Version1;
+using Calculi.Shared.Deprecated.Version1.Converters;
 
 namespace Calculi
 {

@@ -3,7 +3,7 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 
-using Calculi.Shared;
+using Calculi.Shared.Deprecated.Version1;
 
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -362,7 +362,7 @@ namespace Calculi
         }
         private void InitiateCalculatorIO()
         {
-            calculatorIO = new Shared.CalculatorIO();
+            calculatorIO = new Shared.Deprecated.Version1.CalculatorIO();
             this.symbolToStringConverter = ConverterFactory.GetSymbolToStringConverter(this.Resources);
             this.stringToSymbolConverter = ConverterFactory.GetStringToSymbolConverter(this.Resources);
             this.stringToExpressionConverter = ConverterFactory.GetStringToExpressionConverter(this.stringToSymbolConverter);

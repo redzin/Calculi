@@ -1,19 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical" >
+  
+  <fragment
+    android:id="@+id/outputPreviewFragment"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    class="Calculi.Android2.Fragments.OutputPreviewFragment"
+    tools:layout="@layout/fragment_output_preview">
+  </fragment>
+  
+  <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
     android:orientation="horizontal" >
-
+    
     <fragment
-        android:id="@+id/historyFragment"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        class="Calculi.Android2.HistoryFragment"
-        tools:layout="@layout/fragment_history">
+      android:id="@+id/keypadFragment"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="3"
+      class="Calculi.Android2.Fragments.KeypadFragment"
+      tools:layout="@layout/fragment_keypad">
     </fragment>
 
+    <fragment
+      android:id="@+id/keypadArithmeticFragment"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="2"
+      class="Calculi.Android2.Fragments.KeypadArithmeticFragment"
+      tools:layout="@layout/fragment_keypad_arithmetic">
+    </fragment>
+    
+  </LinearLayout>
+  
 </LinearLayout>

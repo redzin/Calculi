@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculi.Android", "Calculi.
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Calculi.Shared", "..\Calculi.Shared\Calculi.Shared.shproj", "{309E9774-C2C6-49C1-97C2-699A3F7E37C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FragmentSample", "..\FragmentSample\FragmentSample.csproj", "{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculi.Android2", "..\Calculi.Android2\Calculi.Android2.csproj", "{681A0D1F-8A2F-4D4F-83B9-0480BBD4620E}"
 EndProject
 Global
@@ -28,12 +26,6 @@ Global
 		{955AC7FD-FFAB-4595-A048-6A038697C7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{955AC7FD-FFAB-4595-A048-6A038697C7EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{955AC7FD-FFAB-4595-A048-6A038697C7EB}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4ACDF5D8-6FF9-4E1E-88C8-9E06C41DB477}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{681A0D1F-8A2F-4D4F-83B9-0480BBD4620E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{681A0D1F-8A2F-4D4F-83B9-0480BBD4620E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{681A0D1F-8A2F-4D4F-83B9-0480BBD4620E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU

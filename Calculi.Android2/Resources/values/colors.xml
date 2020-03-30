@@ -11,21 +11,23 @@
   <color name="colorBackground">#fafafa</color>
   <color name="colorLines">#dddddd</color>
 
+  <!-- History fragment colors -->
   <color name="colorHistoryEntryText">#666666</color>
   <color name="colorInputTextPreview">#666666</color>
   <color name="colorInputText">#333333</color>
   <color name="colorOutputText">#9c9c9c</color>
 
-  <color name="colorButtonText">#eeeeee</color>
-  <color name="colorButtonBackground">#f98921</color>
-  
-  <color name="colorButtonBlueText">#eeeeee</color>
-  <color name="colorButtonBlueBackground">#2189f9</color>
-  
-  <color name="colorButtonNumericText">#555555</color>
-  <color name="colorButtonNumericBackground">#eeeeee</color>
-  
-  <color name="colorButtonSpecialText">#555555</color>
-  <color name="colorButtonSpecialBackground">#cccccc</color>
+  <!-- Keypad button colors -->
+  <color name="colorButtonTextPrimary">#555555</color>
+  <color name="colorButtonBackgroundPrimary">#eeeeee</color>
+
+  <color name="colorButtonTextSecondary">#eeeeee</color>
+  <color name="colorButtonBackgroundSecondary">#f98921</color>
+
+  <color name="colorButtonTextTertiary">#eeeeee</color>
+  <color name="colorButtonBackgroundTertiary">#2189f9</color>
+
+  <color name="colorButtonTextQuaternary">#555555</color>
+  <color name="colorButtonBackgroundQuaternary">#cccccc</color>
   
 </resources>

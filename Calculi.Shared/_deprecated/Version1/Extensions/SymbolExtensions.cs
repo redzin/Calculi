@@ -1,11 +1,12 @@
 ﻿using System;
-using Calculi.Shared.Types;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Calculi.Shared.Extensions
+namespace Calculi.Shared.Deprecated.Version1.Extensions
 {
-    static class SymbolExtensions
+    public static class SymbolExtensions
     {
-        public static bool IsLeftParenthesisEquivalent(this Symbol symbol)
+        public static bool IsLeftParenthsisEquivalent(this Symbol symbol)
         {
             return Symbols.LeftParenthesisEquivalents.Contains(symbol);
         }
@@ -13,7 +14,7 @@ namespace Calculi.Shared.Extensions
         {
             return Symbols.Numerals.Contains(symbol);
         }
-        public static int ToInteger(this Symbol symbol)
+        public static int ToInt(this Symbol symbol)
         {
             switch (symbol)
             {

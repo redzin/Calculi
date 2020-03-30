@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorButtonBackgroundSecondary">
+  
+  <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical" >
+    
+    <TextView
+      android:id="@+id/keypadDivision"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_divide"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextSecondary"/>
+    
+    <TextView
+      android:id="@+id/keypadMultiplication"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_multiply"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextSecondary"/>
+    
+    <TextView
+      android:id="@+id/keypadSubtraction"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_subtract"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextSecondary"/>
+    
+    <TextView
+      android:id="@+id/keypadAddition"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_add"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextSecondary"/>
+    
+  </LinearLayout>
+  
+  
+  <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical" >
+    
+    <TextView
+      android:id="@+id/keypadSquareRoot"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_square_root"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextSecondary"/>
+    
+    <TextView
+      android:id="@+id/keypadAnswer"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_answer"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextSecondary"/>
+    
+    <TextView
+      android:id="@+id/keypadEnter"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="2"
+      android:gravity="center|center"
+      android:text="@string/button_enter"
+      android:textSize="30dip"
+      android:textColor="@color/colorButtonTextTertiary"
+      android:background="@color/colorButtonBackgroundTertiary"/>
+    
+  </LinearLayout>
+  
+</LinearLayout>
