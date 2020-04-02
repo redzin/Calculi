@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  android:background="@color/colorButtonBackgroundQuaternary">
 
   <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,155 +12,150 @@
     android:layout_height="match_parent"
     android:gravity="center|center"
     android:layout_weight="1"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:textColor="@color/colorButtonTextQuaternary" >
     
     <TextView
-      android:id="@+id/keypadSeven"
+      android:id="@+id/keypadLeftParenthesis"
       android:layout_width="0dp"
       android:layout_height="fill_parent"
       android:layout_weight="1"
       android:gravity="center|center"
-      android:text="@string/button_7"
-      android:textSize="30dip"
+      android:text="@string/button_left_parenthesis"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp"/>
+
+    <TextView
+      android:id="@+id/keypadRightParenthesis"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_right_parenthesis"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
     <TextView
-      android:id="@+id/keypadEight"
+      android:id="@+id/keypadSine"
       android:layout_width="0dp"
       android:layout_height="fill_parent"
       android:layout_weight="1"
       android:gravity="center|center"
-      android:text="@string/button_8"
-      android:textSize="30dip"
+      android:text="@string/button_sine"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
     <TextView
-      android:id="@+id/keypadNine"
+      android:id="@+id/keypadCosine"
       android:layout_width="0dp"
       android:layout_height="fill_parent"
       android:layout_weight="1"
       android:gravity="center|center"
-      android:text="@string/button_9"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-  </LinearLayout>
-
-  <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center|center"
-    android:layout_weight="1"
-    android:orientation="horizontal" >
-    
-    <TextView
-      android:id="@+id/keypadFour"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_4"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadFive"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_5"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadSix"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_6"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-  </LinearLayout>
-
-  <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center|center"
-    android:layout_weight="1"
-    android:orientation="horizontal">
-    
-    <TextView
-      android:id="@+id/keypadOne"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_1"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadTwo"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_2"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadThree"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_3"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-  </LinearLayout>
-
-  <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center|center"
-    android:layout_weight="1"
-    android:orientation="horizontal" >
-    
-    <TextView
-      android:id="@+id/keypadZero"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_0"
-      android:textSize="30dip"
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadPoint"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_point"
-      android:textSize="30dip"
+      android:text="@string/button_cosine"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
         
     <TextView
+      android:id="@+id/keypadTangent"
       android:layout_width="0dp"
       android:layout_height="fill_parent"
       android:layout_weight="1"
       android:gravity="center|center"
-      android:textSize="30dip"
+      android:text="@string/button_tangent"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadModulo"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_modulo"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
   </LinearLayout>
+
+  <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center|center"
+    android:layout_weight="1"
+    android:orientation="horizontal" >
+    
+    <TextView
+      android:id="@+id/keypadLn"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_ln"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadLog"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_log"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadExp"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_exponential"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadPower"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_power"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+        
+    <TextView
+      android:id="@+id/keypadSquare"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_square"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadSquareRoot"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_square_root"
+      android:textSize="20dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+  </LinearLayout>
+
 </LinearLayout>

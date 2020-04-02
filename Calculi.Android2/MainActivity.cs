@@ -5,10 +5,11 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Runtime;
 using Calculi.Android2.Fragments;
+using Calculi.Literal.Errors;
 using Calculi.Shared;
-using Calculi.Shared.Deprecated.Version1.Converters;
 using Calculi.Shared.Extensions;
 using Calculi.Shared.Types;
+using Calculi.Support;
 
 namespace Calculi.Android2
 {
@@ -19,41 +20,86 @@ namespace Calculi.Android2
     )]
     public class MainActivity : AppCompatActivity
     {
-        private OutputPreviewFragment outputPreviewFragment;
-        private KeypadFragment keypadFragment;
-        private KeypadArithmeticFragment keypadArithmeticFragment;
-        private Calculator calculator = new Calculator { Expression = { }, History = { }, CursorPosition = 0 };
+        private readonly Observable<Calculator> _calculator = new Observable<Calculator>(new Calculator(new Expression(), 0, (new List<ExpressionCalculationPair>()).AsReadOnly()));
+        private readonly List<Subscription<Calculator>> _subscriptions = new List<Subscription<Calculator>>();
+
+        private OutputPreviewFragment _outputPreviewFragment;
+        private KeypadFragment _keypadFragment;
+        private KeypadArithmeticFragment _keypadArithmeticFragment;
+        private KeypadAdvancedFragment _keypadAdvancedFragment;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+
             SetContentView(Resource.Layout.activity_main);
 
+            SetFragmentViews();
             SetSymbolStringConverters();
-            outputPreviewFragment = (OutputPreviewFragment)SupportFragmentManager.FindFragmentById(Resource.Id.outputPreviewFragment);
-            keypadFragment = (KeypadFragment)SupportFragmentManager.FindFragmentById(Resource.Id.keypadFragment);
-            keypadArithmeticFragment = (KeypadArithmeticFragment)SupportFragmentManager.FindFragmentById(Resource.Id.keypadArithmeticFragment);
-
-            Events.OnCursorPositionIncremented = i => { };
-            Events.OnCursorPositionDecremented = i => { };
-            Events.OnSymbolInserted += symbol => { };
-            Events.OnSymbolRemoved += symbol => { };
-            Events.OnExpressionCleared += () => { UpdateOutputPreviewText(new ExpressionCalculationPair(null, null)); };
-            Events.OnHistoryEntryAdded += pair => UpdateOutputPreviewText(pair);
-
-            keypadFragment.OnClick += symbol => calculator.InsertSymbol(symbol);
-            keypadArithmeticFragment.OnSymbolClick += symbol => calculator.InsertSymbol(symbol);
-            keypadArithmeticFragment.OnEnterClick += () => calculator.MoveInputToHistory();
-
+            SetCalculatorStateListeners();
+            SetUIBindings();
         }
 
-        private void UpdateOutputPreviewText(ExpressionCalculationPair pair)
+        private void SetCalculatorStateListeners()
         {
-            outputPreviewFragment.SetOutputText(pair.Expression == null ? "" : pair.Expression.ToString());
-            outputPreviewFragment.SetPreviewText(pair.Calculation == null ? "" : pair.Calculation.ToString());
+            _calculator.Subscribe(calculator =>
+            {
+                _outputPreviewFragment.SetOutputText(calculator.Expression == null ? "" : calculator.Expression.ToString());
+                
+                _calculator.Value.Expression.ParseToString().Match(
+                    left: (e) =>
+                    {
+                        _outputPreviewFragment.SetPreviewText("");
+                    },
+                    right: (parsedExpressionString) =>
+                    {
+                        _outputPreviewFragment.SetPreviewText(parsedExpressionString);
+                    }
+                );
+            });
         }
 
+
+        private void SetUIBindings()
+        {
+            Action<Symbol> insertSymbol = symbol =>
+            {
+                _calculator.Value.InsertSymbol(symbol).Match(
+                    left: e => { },
+                    right: calculator => _calculator.Next(calculator)
+                );
+            };
+
+
+            _keypadFragment.OnClick += symbol => insertSymbol(symbol);
+            _keypadArithmeticFragment.OnSymbolClick += symbol => insertSymbol(symbol);
+            _keypadAdvancedFragment.OnSymbolClick += symbol => insertSymbol(symbol);
+            _keypadArithmeticFragment.OnClearClick += () => _calculator.Next(_calculator.Value.ClearExpression());
+            _keypadArithmeticFragment.OnDeleteClick += () => _calculator.Next(_calculator.Value.RemoveSymbol());
+
+            _keypadArithmeticFragment.OnEnterClick += () =>
+            {
+                _calculator.Value.MoveInputToHistory().Match(
+                    left: e =>
+                    {
+                        if (e is UserMessageException)
+                        {
+                            // show user message in pop-up notification
+                        }
+                    },
+                    right: calculator => { _calculator.Next(calculator); }
+                );
+            };
+        }
+
+        private void SetFragmentViews()
+        {
+            _outputPreviewFragment = (OutputPreviewFragment)SupportFragmentManager.FindFragmentById(Resource.Id.outputPreviewFragment);
+            _keypadFragment = (KeypadFragment)SupportFragmentManager.FindFragmentById(Resource.Id.keypadFragment);
+            _keypadArithmeticFragment = (KeypadArithmeticFragment)SupportFragmentManager.FindFragmentById(Resource.Id.keypadArithmeticFragment);
+            _keypadAdvancedFragment = (KeypadAdvancedFragment)SupportFragmentManager.FindFragmentById(Resource.Id.keypadAdvancedFragment);
+        }
         private void SetSymbolStringConverters()
         {
             Dictionary<Symbol, string> symbolToStringDictionary = new Dictionary<Symbol, string>() {
@@ -131,6 +177,11 @@ namespace Calculi.Android2
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected override void OnDestroy()
+        {
+            _subscriptions.ForEach(sub => sub.Unsubscribe());
         }
     }
 }

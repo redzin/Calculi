@@ -18,7 +18,8 @@
   <!-- Arithmetic and algebra-->
   <string name="button_add">&#43;</string>
   <string name="button_subtract">&#8722;</string>
-  <string name="button_multiply">&#10005;</string>
+  <!--<string name="button_multiply">&#10005;</string>-->
+  <string name="button_multiply">&#215;</string>
   <string name="button_divide">&#247;</string>
   <string name="button_modulo">mod</string>
   <string name="button_exponential">exp</string>
@@ -30,7 +31,7 @@
 
   <!-- Meta functions -->
   <string name="button_delete">&#9003;</string>
-  <string name="button_clear">CLR</string>
+  <string name="button_clear">C</string>
   <string name="button_enter">=</string>
   <!--<string name="button_enter">&#9166;</string>-->
   <string name="button_2nd">2nd</string>

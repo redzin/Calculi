@@ -60,7 +60,8 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fragments\KeypadFragmentArithmetic.cs" />
+    <Compile Include="Fragments\KeypadAdvancedFragment.cs" />
+    <Compile Include="Fragments\KeypadArithmeticFragment.cs" />
     <Compile Include="Fragments\KeypadFragment.cs" />
     <Compile Include="Fragments\OutputPreviewFragment.cs" />
     <Compile Include="Fragments\HelloWorldFragment.cs" />
@@ -139,7 +140,13 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-  <Import Project="..\Calculi.Shared\Calculi.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\fragment_keypad_advanced.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <Import Project="..\Calculi.Literal\Calculi.Literal.projitems" Label="Shared" />
+  <Import Project="..\Calculi.Support\Calculi.Support.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
     Other similar extension points exist, see Microsoft.Common.targets.

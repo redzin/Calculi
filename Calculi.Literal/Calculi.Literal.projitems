@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a90808cb-01f7-40a7-b62d-ee33eac2fd4f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Calculi.Literal</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Converters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\UserMessageException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExpressionParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\CalculationExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\CalculatorExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ExpressionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\LinqExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymbolExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Calculation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Calculator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Error.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Expression.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\ExpressionCalculationPair.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Symbols.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Calculation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\CalculationResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\CalculatorIO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Converters\CalculationToDouble.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Converters\ExpressionToCalculationConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Converters\ExpressionToStringConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Converters\StringToExpressionConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Converters\StringToSymbolConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Converters\SymbolToStringConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Expression.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Extensions\LinqTreeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Extensions\SymbolExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Interfaces\ICalculation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Interfaces\ICalculatorIO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Interfaces\IConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Interfaces\IExpression.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_deprecated\Version1\Symbols.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)_deprecated\" />
+  </ItemGroup>
+</Project>

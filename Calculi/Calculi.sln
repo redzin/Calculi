@@ -5,15 +5,20 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculi.Android", "Calculi.Android.csproj", "{955AC7FD-FFAB-4595-A048-6A038697C7EB}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Calculi.Shared", "..\Calculi.Shared\Calculi.Shared.shproj", "{309E9774-C2C6-49C1-97C2-699A3F7E37C9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculi.Android2", "..\Calculi.Android2\Calculi.Android2.csproj", "{681A0D1F-8A2F-4D4F-83B9-0480BBD4620E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Calculi.Literal", "..\Calculi.Literal\Calculi.Literal.shproj", "{A90808CB-01F7-40A7-B62D-EE33EAC2FD4F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Calculi.Support", "..\Calculi.Support\Calculi.Support.shproj", "{4C3650A6-9CA7-4DE6-8B79-FA3C961CFDE5}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Calculi.Shared\Calculi.Shared.projitems*{309e9774-c2c6-49c1-97c2-699a3f7e37c9}*SharedItemsImports = 13
-		..\Calculi.Shared\Calculi.Shared.projitems*{681a0d1f-8a2f-4d4f-83b9-0480bbd4620e}*SharedItemsImports = 4
-		..\Calculi.Shared\Calculi.Shared.projitems*{955ac7fd-ffab-4595-a048-6a038697c7eb}*SharedItemsImports = 4
+		..\Calculi.Support\Calculi.Support.projitems*{4c3650a6-9ca7-4de6-8b79-fa3c961cfde5}*SharedItemsImports = 13
+		..\Calculi.Literal\Calculi.Literal.projitems*{681a0d1f-8a2f-4d4f-83b9-0480bbd4620e}*SharedItemsImports = 4
+		..\Calculi.Support\Calculi.Support.projitems*{681a0d1f-8a2f-4d4f-83b9-0480bbd4620e}*SharedItemsImports = 4
+		..\Calculi.Literal\Calculi.Literal.projitems*{955ac7fd-ffab-4595-a048-6a038697c7eb}*SharedItemsImports = 4
+		..\Calculi.Support\Calculi.Support.projitems*{955ac7fd-ffab-4595-a048-6a038697c7eb}*SharedItemsImports = 4
+		..\Calculi.Literal\Calculi.Literal.projitems*{a90808cb-01f7-40a7-b62d-ee33eac2fd4f}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

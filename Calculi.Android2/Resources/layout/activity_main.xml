@@ -15,6 +15,15 @@
     tools:layout="@layout/fragment_output_preview">
   </fragment>
   
+  <fragment
+    android:id="@+id/keypadAdvancedFragment"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.5"
+    class="Calculi.Android2.Fragments.KeypadAdvancedFragment"
+    tools:layout="@layout/fragment_keypad_advanced">
+  </fragment>
+
   <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"

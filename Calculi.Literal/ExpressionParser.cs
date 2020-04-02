@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Calculi.Literal.Errors;
 using Calculi.Shared.Extensions;
 using Calculi.Shared.Types;
+using Calculi.Support;
 
 namespace Calculi.Shared.Parsing
 {
@@ -12,14 +14,21 @@ namespace Calculi.Shared.Parsing
             (expression, history) => ParseExpression(expression, history);
 
         private static readonly Func<Expression, Calculation, Calculation> ParseExpression =
-            (expression, history)=> ParseTerms(expression, history);
+            (expression, history) =>
+            {
+                if (expression.Count == 0)
+                {
+                    throw new UserMessageException(Error.EMPTY_EXPRESSION);
+                }
+                return ParseTerms(expression, history);
+            };
 
         private static readonly Func<Expression, Calculation, Calculation> ParseTerms =
             (expression, history) =>
             {
                 if (expression.Count == 0)
                 {
-                    throw new Exception("Invalid expression");
+                    throw new UserMessageException(Error.MISSING_TERM);
                 }
 
                 int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
@@ -58,7 +67,7 @@ namespace Calculi.Shared.Parsing
             {
                 if (expression.Count == 0)
                 {
-                    throw new Exception("Invalid expression");
+                    throw new UserMessageException(Error.MISSING_FACTOR);
                 }
 
                 int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
@@ -117,10 +126,10 @@ namespace Calculi.Shared.Parsing
         private static readonly Func<Expression, Calculation, Calculation> ParseDivision =
             (expression, history) =>
             {
-                if (expression.Count == 0)
-                {
-                    throw new Exception("Invalid expression");
-                }
+                //if (expression.Count == 0)
+                //{
+                //    throw new UserMessageException(Error.MISSING_DIVISION);
+                //}
 
                 int symbolIndex =
                     GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.DIVIDE}}, false);
@@ -130,21 +139,43 @@ namespace Calculi.Shared.Parsing
                 {
                     case Symbol.DIVIDE:
                         return new Calculation(
-                            new List<Calculation>()
+                                new Try<List<Calculation>>( () =>
+                                {
+                                    List<Calculation> children = new List<Calculation>();
+                                    new Try<Calculation>(() =>
+                                        ParseDivision(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),history))
+                                            .Result
+                                            .Match(
+                                                left: (e) => throw new UserMessageException(Error.MISSING_NUMERATOR),
+                                                right: (child) => children.Add(child)
+                                            );
+                                    new Try<Calculation>(() =>
+                                            ParseDivision(expression.Where((symbol, index) => index > symbolIndex).ToExpression(), history))
+                                        .Result
+                                        .Match(
+                                            left: (e) => throw new UserMessageException(Error.MISSING_DENOMINATOR),
+                                            right: (child) => children.Add(child)
+                                        );
+                                    return children;
+
+                                })
+                                .Result.Match(
+                                    left: (e) => throw new UserMessageException(Error.MISSING_FACTOR),
+                                    right: (children) => children
+                                ),
+                            a =>
                             {
-                                ParseDivision(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),
-                                    history),
-                                ParseDivision(expression.Where((symbol, index) => index > symbolIndex).ToExpression(),
-                                    history)
-                            },
-                            a => a[0] / a[1]
-                        );
+                                return new Try<double>(() => a[0] / a[1]).Result.Match(
+                                    left: (e) => throw new UserMessageException(Error.DIVISION_BY_ZERO),
+                                    right: (result) => result
+                                );
+                            });
                 }
 
-                return ParseParenthsis(expression, history);
+                return ParseParenthesis(expression, history);
             };
 
-        private static readonly Func<Expression, Calculation, Calculation> ParseParenthsis =
+        private static readonly Func<Expression, Calculation, Calculation> ParseParenthesis =
             (expression, history) =>
             {
                 Symbol operation = expression.Count > 0 ? expression.First() : Symbol.EOF;
@@ -183,7 +214,7 @@ namespace Calculi.Shared.Parsing
             {
                 if (expression.Count < 3 || !expression.Last().Equals(Symbol.RIGHT_PARENTHESIS))
                 {
-                    throw new Exception("Invalid expression");
+                    throw new UserMessageException(Error.MISMATCHING_PARENTHESIS);
                 }
                 return new Calculation(
                     new List<Calculation>()
@@ -210,11 +241,11 @@ namespace Calculi.Shared.Parsing
                             .ToExpression();
                         if (lhs.Count == 0 && rhs.Count == 0)
                         {
-                            throw new Exception("Invalid expression");
+                            throw new UserMessageException(Error.INVALID_POINT);
                         }
 
-                        lhs = lhs.Count > 0 ? lhs : new Expression() {Symbol.ZERO};
-                        rhs = rhs.Count > 0 ? rhs : new Expression() {Symbol.ZERO};
+                        lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() { Symbol.ZERO });
+                        rhs = rhs.Count > 0 ? rhs : new Expression(new List<Symbol>() { Symbol.ZERO });
                         return new Calculation(
                             new List<Calculation>()
                             {
@@ -265,7 +296,7 @@ namespace Calculi.Shared.Parsing
 
                 if (scope != 0)
                 {
-                    throw new Exception("Non-matching brackets!");
+                    throw new UserMessageException(Error.MISMATCHING_PARENTHESIS);
                 }
 
                 return scopeMarker;
@@ -290,7 +321,7 @@ namespace Calculi.Shared.Parsing
                 return indices;
             };
 
-        private static Func<Expression, List<Symbol>, bool, int> GetIndexOfFirstGlobalOperatorOfTypes =
+        private static readonly Func<Expression, List<Symbol>, bool, int> GetIndexOfFirstGlobalOperatorOfTypes =
             (expression, types, first) =>
             {
                 List<int> globalOperationIndices = GetIndicesOfGlobalOperatorsOfTypes(expression, types);

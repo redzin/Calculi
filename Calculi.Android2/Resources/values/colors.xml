@@ -19,15 +19,15 @@
 
   <!-- Keypad button colors -->
   <color name="colorButtonTextPrimary">#555555</color>
-  <color name="colorButtonBackgroundPrimary">#eeeeee</color>
+  <color name="colorButtonBackgroundPrimary">#fafafa</color>
 
-  <color name="colorButtonTextSecondary">#eeeeee</color>
-  <color name="colorButtonBackgroundSecondary">#f98921</color>
+  <color name="colorButtonTextSecondary">#f98921</color>
+  <color name="colorButtonBackgroundSecondary">#fafafa</color>
 
-  <color name="colorButtonTextTertiary">#eeeeee</color>
-  <color name="colorButtonBackgroundTertiary">#2189f9</color>
+  <color name="colorButtonTextTertiary">#2189f9</color>
+  <color name="colorButtonBackgroundTertiary">#fafafa</color>
 
-  <color name="colorButtonTextQuaternary">#555555</color>
-  <color name="colorButtonBackgroundQuaternary">#cccccc</color>
+  <color name="colorButtonTextQuaternary">#fafafa</color>
+  <color name="colorButtonBackgroundQuaternary">#2189f9</color>
   
 </resources>

@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Calculi.Shared.Parsing;
 using Calculi.Shared.Types;
+using Calculi.Support;
 
 namespace Calculi.Shared.Extensions
 {
@@ -18,9 +20,9 @@ namespace Calculi.Shared.Extensions
         {
             return expression.ParseToCalculation().ToDouble();
         }
-        public static string ParseToString(this Expression expression)
+        public static Either<Exception, string> ParseToString(this Expression expression)
         {
-            return expression.ParseToDouble().ToString(CultureInfo.InvariantCulture);
+            return new Try<string>(() => expression.ParseToDouble().ToString(CultureInfo.InvariantCulture)).Result;
         }
         public static string ToString(this Expression expression)
         {
