@@ -85,7 +85,7 @@ namespace Calculi.Literal.Extensions
                     };
 
                     return new Try<double>(a).Result.Match(
-                        left: (exception) => newCalc.RemoveSymbol().DecrementPosition(),
+                        left: (exception) => newCalc.RemoveSymbol(),
                         right: (d => newCalc.DecrementPosition())
                     );
                 }
