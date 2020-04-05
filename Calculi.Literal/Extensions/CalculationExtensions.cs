@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
 
-namespace Calculi.Shared.Extensions
+namespace Calculi.Literal.Extensions
 {
     static class CalculationExtensions
     {

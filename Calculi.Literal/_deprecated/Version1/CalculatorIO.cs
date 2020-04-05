@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Calculi.Shared.Deprecated.Version1.Extensions;
 using Calculi.Shared.Deprecated.Version1.Converters;
+using Calculi.Shared.Deprecated.Version1.Extensions;
 
 namespace Calculi.Shared.Deprecated.Version1
 {

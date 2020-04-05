@@ -1,8 +1,6 @@
-﻿using Calculi.Shared.Deprecated.Version1.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
+using Calculi.Shared.Deprecated.Version1.Extensions;
 
 namespace Calculi.Shared.Deprecated.Version1.Converters
 {

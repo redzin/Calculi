@@ -12,7 +12,7 @@ using Android.Widget;
 using Calculi.Shared.Deprecated.Version1;
 using Calculi.Shared.Deprecated.Version1.Converters;
 
-namespace Calculi
+namespace Calculi.Shared.Deprecated.Version1
 {
     internal static class ConverterFactory
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Calculi.Shared.Extensions;
+using Calculi.Literal.Extensions;
 
-namespace Calculi.Shared.Types
+namespace Calculi.Literal.Types
 {
     public class Calculation
     {

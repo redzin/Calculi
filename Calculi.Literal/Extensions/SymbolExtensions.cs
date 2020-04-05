@@ -1,10 +1,14 @@
 ﻿using System;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
 
-namespace Calculi.Shared.Extensions
+namespace Calculi.Literal.Extensions
 {
     static class SymbolExtensions
     {
+        public static string ToString(this Symbol symbol)
+        {
+            return Converters.SymbolToString(symbol);
+        }
         public static bool IsLeftParenthesisEquivalent(this Symbol symbol)
         {
             return Symbols.LeftParenthesisEquivalents.Contains(symbol);

@@ -2,30 +2,39 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Calculi.Shared.Types
+namespace Calculi.Literal.Types
 {
-    class Calculator
+    public class Calculator
     {
-        public Expression Expression { get; }
-        public int CursorPosition { get; }
-        public ReadOnlyCollection<ExpressionCalculationPair> History { get; }
+        public Expression Expression { get; } = new Expression();
+        public int CursorPositionStart { get; } = 0;
+        public int CursorPositionEnd { get; } = 0;
+        public ReadOnlyCollection<ExpressionCalculationPair> History { get; } = (new List<ExpressionCalculationPair>()).AsReadOnly();
 
-        public Calculator(Expression expression, int cursorPosition, ReadOnlyCollection<ExpressionCalculationPair> history)
+        public Calculator()
+        {
+
+        }
+
+        public Calculator(Expression expression, int cursorPositionStart, int cursorPositionEnd, ReadOnlyCollection<ExpressionCalculationPair> history)
         {
             Expression = expression;
-            CursorPosition = cursorPosition;
+            CursorPositionStart = cursorPositionStart;
+            CursorPositionEnd = cursorPositionEnd;
             History = history;
         }
 
         public static Calculator Mutate(
             Calculator source,
             Expression expression = null,
-            int? cursorPosition = null,
+            int? cursorPositionStart = null,
+            int? cursorPositionEnd = null,
             ReadOnlyCollection<ExpressionCalculationPair> history = null)
         {
             return new Calculator(
                 expression ?? source.Expression,
-                cursorPosition ?? source.CursorPosition,
+                cursorPositionStart ?? source.CursorPositionStart,
+                cursorPositionEnd ?? source.CursorPositionEnd,
                 history ?? source.History
             );
         }

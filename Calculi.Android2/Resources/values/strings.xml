@@ -52,9 +52,7 @@
   <string name="button_cotangent">cot</string>
 
   <!-- IO -->
-  <string name="initInputString">0</string>
   <string name="outputFragmentDefault"></string>
-  <string name="cursor">&#124;</string>
 
   <!--Output symbols (used for conversion of symbol to string)-->
   <string name="symbol_0">0</string>
@@ -73,21 +71,21 @@
   <string name="symbol_multiply">&#160;&#215;&#160;</string>
   <string name="symbol_divide">&#160;&#247;&#160;</string>
   <string name="symbol_modulo">&#160;mod&#160;</string>
-  <string name="symbol_exponential">&#160;exp(</string>
+  <string name="symbol_exponential">exp(</string>
   <string name="symbol_power">^</string>
-  <string name="symbol_sqr">&#178;&#160;</string>
-  <string name="symbol_sqrt">&#160;&#8730;(</string>
-  <string name="symbol_logarithm">&#160;log&#8321;&#8320;(</string>
-  <string name="symbol_natural_logarithm">&#160;ln(</string>
+  <string name="symbol_sqr">&#178;</string>
+  <string name="symbol_sqrt">&#8730;(</string>
+  <string name="symbol_logarithm">log&#8321;&#8320;(</string>
+  <string name="symbol_natural_logarithm">ln(</string>
   <string name="symbol_left_parenthesis">(</string>
   <string name="symbol_right_parenthesis">)</string>
-  <string name="symbol_answer">&#160;ANS&#160;</string>
-  <string name="symbol_sine">&#160;sin(</string>
-  <string name="symbol_cosine">&#160;cos(</string>
-  <string name="symbol_tangent">&#160;tan(</string>
-  <string name="symbol_secant">&#160;sec(</string>
-  <string name="symbol_cosecant">&#160;csc(</string>
-  <string name="symbol_cotangent">&#160;cot(</string>
+  <string name="symbol_answer">ANS</string>
+  <string name="symbol_sine">sin(</string>
+  <string name="symbol_cosine">cos(</string>
+  <string name="symbol_tangent">tan(</string>
+  <string name="symbol_secant">sec(</string>
+  <string name="symbol_cosecant">csc(</string>
+  <string name="symbol_cotangent">cot(</string>
 
 
   <string name="history_get_result">Get result</string>

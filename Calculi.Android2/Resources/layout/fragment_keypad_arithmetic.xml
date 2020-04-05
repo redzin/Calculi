@@ -18,7 +18,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_divide"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
     
@@ -29,7 +29,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_multiply"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
     
@@ -40,7 +40,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_subtract"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
     
@@ -51,7 +51,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_add"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
     
@@ -71,7 +71,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_clear"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
     
@@ -82,7 +82,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_delete"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
         
@@ -91,7 +91,7 @@
       android:layout_height="0dp"
       android:layout_weight="1"
       android:gravity="center|center"
-      android:textSize="30dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextSecondary" 
       android:padding="10dp"/>
 
@@ -102,7 +102,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_enter"
-      android:textSize="40dip"
+      android:textSize="24dp"
       android:textColor="@color/colorButtonTextTertiary"
       android:background="@color/colorButtonBackgroundTertiary" 
       android:padding="10dp"/>

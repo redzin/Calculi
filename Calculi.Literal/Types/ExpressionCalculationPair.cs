@@ -1,7 +1,7 @@
 ﻿
-namespace Calculi.Shared.Types
+namespace Calculi.Literal.Types
 {
-    class ExpressionCalculationPair
+    public class ExpressionCalculationPair
     {
         public Expression Expression { get; }
         public Calculation Calculation { get; }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
 
-namespace Calculi.Shared
+namespace Calculi.Literal
 {
     static class Converters
     {

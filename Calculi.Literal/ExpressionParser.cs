@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Calculi.Literal.Errors;
-using Calculi.Shared.Extensions;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
+using Calculi.Literal.Extensions;
 using Calculi.Support;
 
-namespace Calculi.Shared.Parsing
+namespace Calculi.Literal.Parsing
 {
     static class ExpressionParser
     {
@@ -150,12 +150,12 @@ namespace Calculi.Shared.Parsing
                                                 right: (child) => children.Add(child)
                                             );
                                     new Try<Calculation>(() =>
-                                            ParseDivision(expression.Where((symbol, index) => index > symbolIndex).ToExpression(), history))
-                                        .Result
-                                        .Match(
-                                            left: (e) => throw new UserMessageException(Error.MISSING_DENOMINATOR),
-                                            right: (child) => children.Add(child)
-                                        );
+                                        ParseDivision(expression.Where((symbol, index) => index > symbolIndex).ToExpression(), history))
+                                            .Result
+                                            .Match(
+                                                left: (e) => throw new UserMessageException(Error.MISSING_DENOMINATOR),
+                                                right: (child) => children.Add(child)
+                                            );
                                     return children;
 
                                 })
@@ -165,8 +165,11 @@ namespace Calculi.Shared.Parsing
                                 ),
                             a =>
                             {
-                                return new Try<double>(() => a[0] / a[1]).Result.Match(
-                                    left: (e) => throw new UserMessageException(Error.DIVISION_BY_ZERO),
+                                return new Try<double>(() =>
+                                {
+                                    return a[1] != 0 ? a[0] / a[1] : throw new UserMessageException(Error.DIVISION_BY_ZERO);
+                                }).Result.Match(
+                                    left: (e) => throw new UserMessageException(Error.UNKNOWN_ERROR),
                                     right: (result) => result
                                 );
                             });

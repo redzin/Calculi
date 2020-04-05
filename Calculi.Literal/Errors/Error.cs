@@ -14,6 +14,7 @@ namespace Calculi.Literal.Errors
         MISSING_DENOMINATOR,
         DIVISION_BY_ZERO,
         INVALID_POINT,
-        COULD_NOT_INSERT
+        COULD_NOT_INSERT,
+        UNKNOWN_ERROR
     }
 }

@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Runtime;
+using Android.Views;
+using Android.Views.InputMethods;
+using Android.Widget;
 using Calculi.Android2.Fragments;
 using Calculi.Literal.Errors;
-using Calculi.Shared;
-using Calculi.Shared.Extensions;
-using Calculi.Shared.Types;
+using Calculi.Literal;
+using Calculi.Literal.Extensions;
+using Calculi.Literal.Types;
 using Calculi.Support;
 
 namespace Calculi.Android2
@@ -16,12 +21,15 @@ namespace Calculi.Android2
     [Activity(
         Label = "@string/app_name",
         Theme = "@style/AppTheme",
-        MainLauncher = true
+        MainLauncher = true,
+        WindowSoftInputMode = SoftInput.StateAlwaysHidden
+
     )]
     public class MainActivity : AppCompatActivity
     {
-        private readonly Observable<Calculator> _calculator = new Observable<Calculator>(new Calculator(new Expression(), 0, (new List<ExpressionCalculationPair>()).AsReadOnly()));
         private readonly List<Subscription<Calculator>> _subscriptions = new List<Subscription<Calculator>>();
+
+        public readonly Observable<Calculator> Calculator = new Observable<Calculator>(new Calculator());
 
         private OutputPreviewFragment _outputPreviewFragment;
         private KeypadFragment _keypadFragment;
@@ -37,50 +45,40 @@ namespace Calculi.Android2
 
             SetFragmentViews();
             SetSymbolStringConverters();
-            SetCalculatorStateListeners();
+            SetStateListeners();
             SetUIBindings();
+            SetFocus();
         }
 
-        private void SetCalculatorStateListeners()
+        private void SetFocus()
         {
-            _calculator.Subscribe(calculator =>
+            EditText outputView = (EditText)FindViewById(Resource.Id.outputText);
+            outputView.ShowSoftInputOnFocus = false;
+            InputMethodManager inputMethodManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
+            outputView.RequestFocus();
+        }
+
+        private void SetStateListeners()
+        {
+            Calculator.Subscribe(calculator =>
             {
-                _outputPreviewFragment.SetOutputText(calculator.Expression == null ? "" : calculator.Expression.ToString());
-                
-                _calculator.Value.Expression.ParseToString().Match(
-                    left: (e) =>
-                    {
-                        _outputPreviewFragment.SetPreviewText("");
-                    },
-                    right: (parsedExpressionString) =>
-                    {
-                        _outputPreviewFragment.SetPreviewText(parsedExpressionString);
-                    }
-                );
+                _outputPreviewFragment.Expression.Next(calculator.Expression);
             });
         }
 
-
         private void SetUIBindings()
         {
-            Action<Symbol> insertSymbol = symbol =>
-            {
-                _calculator.Value.InsertSymbol(symbol).Match(
-                    left: e => { },
-                    right: calculator => _calculator.Next(calculator)
-                );
-            };
+            Action<Symbol> insertSymbol = symbol => { Calculator.Next(Calculator.Value.InsertSymbol(symbol)); };
 
-
-            _keypadFragment.OnClick += symbol => insertSymbol(symbol);
+            _keypadFragment.OnSymbolClick += symbol => insertSymbol(symbol);
             _keypadArithmeticFragment.OnSymbolClick += symbol => insertSymbol(symbol);
             _keypadAdvancedFragment.OnSymbolClick += symbol => insertSymbol(symbol);
-            _keypadArithmeticFragment.OnClearClick += () => _calculator.Next(_calculator.Value.ClearExpression());
-            _keypadArithmeticFragment.OnDeleteClick += () => _calculator.Next(_calculator.Value.RemoveSymbol());
+            _keypadArithmeticFragment.OnClearClick += () => Calculator.Next(Calculator.Value.ClearExpression());
+            _keypadArithmeticFragment.OnDeleteClick += () => Calculator.Next(Calculator.Value.RemoveSymbol());
 
             _keypadArithmeticFragment.OnEnterClick += () =>
             {
-                _calculator.Value.MoveInputToHistory().Match(
+                Calculator.Value.MoveInputToHistory().Match(
                     left: e =>
                     {
                         if (e is UserMessageException)
@@ -88,7 +86,7 @@ namespace Calculi.Android2
                             // show user message in pop-up notification
                         }
                     },
-                    right: calculator => { _calculator.Next(calculator); }
+                    right: calculator => { Calculator.Next(calculator); }
                 );
             };
         }

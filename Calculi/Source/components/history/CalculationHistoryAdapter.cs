@@ -1,8 +1,7 @@
 ﻿using System;
-using Calculi.Shared.Deprecated.Version1;
 using Android.Views;
-using System.Linq;
 using Android.Support.V7.Widget;
+using Calculi.Shared.Deprecated.Version1;
 
 namespace Calculi
 {

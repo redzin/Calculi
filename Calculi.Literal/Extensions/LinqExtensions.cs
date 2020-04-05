@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
 
-namespace Calculi.Shared.Extensions
+namespace Calculi.Literal.Extensions
 {
     static class LinqExtensions
     {

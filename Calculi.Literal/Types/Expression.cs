@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Calculi.Shared.Extensions;
+using Calculi.Literal.Extensions;
 
-namespace Calculi.Shared.Types
+namespace Calculi.Literal.Types
 {
-    class Expression : IEnumerable<Symbol>
+    public class Expression : IEnumerable<Symbol>
     {
         private readonly ReadOnlyCollection<Symbol> _symbols;
 

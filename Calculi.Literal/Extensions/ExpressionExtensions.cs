@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
-using Calculi.Shared.Parsing;
-using Calculi.Shared.Types;
+using Calculi.Literal.Parsing;
+using Calculi.Literal.Types;
 using Calculi.Support;
 
-namespace Calculi.Shared.Extensions
+namespace Calculi.Literal.Extensions
 {
     static class ExpressionExtensions
     {

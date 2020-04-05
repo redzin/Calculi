@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Calculi.Shared.Types
+namespace Calculi.Literal.Types
 {
     public enum Symbol
     {

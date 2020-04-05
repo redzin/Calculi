@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace Calculi.Support
 {
-    class Subscription<T>
+    public class Subscription<T>
     {
         private readonly Action<T> _action;
         private readonly Observable<T> _parentObservable;

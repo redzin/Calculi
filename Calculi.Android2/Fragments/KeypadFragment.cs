@@ -3,13 +3,13 @@ using Android.Support.V4.App;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
 
 namespace Calculi.Android2.Fragments
 {
     public class KeypadFragment : Fragment
     {
-        public Action<Symbol> OnClick = symbol => { };
+        public Action<Symbol> OnSymbolClick = symbol => { };
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -37,17 +37,17 @@ namespace Calculi.Android2.Fragments
             TextView buttonNine = (TextView)Activity.FindViewById(Resource.Id.keypadNine);
             TextView buttonPoint = (TextView)Activity.FindViewById(Resource.Id.keypadPoint);
 
-            buttonZero.Click += (sender, e) => OnClick(Symbol.ZERO);
-            buttonOne.Click += (sender, e) => OnClick(Symbol.ONE);
-            buttonTwo.Click += (sender, e) => OnClick(Symbol.TWO);
-            buttonThree.Click += (sender, e) => OnClick(Symbol.THREE);
-            buttonFour.Click += (sender, e) => OnClick(Symbol.FOUR);
-            buttonFive.Click += (sender, e) => OnClick(Symbol.FIVE);
-            buttonSix.Click += (sender, e) => OnClick(Symbol.SIX);
-            buttonSeven.Click += (sender, e) => OnClick(Symbol.SEVEN);
-            buttonEight.Click += (sender, e) => OnClick(Symbol.EIGHT);
-            buttonNine.Click += (sender, e) => OnClick(Symbol.NINE);
-            buttonPoint.Click += (sender, e) => OnClick(Symbol.POINT);
+            buttonZero.Click += (sender, e) => OnSymbolClick(Symbol.ZERO);
+            buttonOne.Click += (sender, e) => OnSymbolClick(Symbol.ONE);
+            buttonTwo.Click += (sender, e) => OnSymbolClick(Symbol.TWO);
+            buttonThree.Click += (sender, e) => OnSymbolClick(Symbol.THREE);
+            buttonFour.Click += (sender, e) => OnSymbolClick(Symbol.FOUR);
+            buttonFive.Click += (sender, e) => OnSymbolClick(Symbol.FIVE);
+            buttonSix.Click += (sender, e) => OnSymbolClick(Symbol.SIX);
+            buttonSeven.Click += (sender, e) => OnSymbolClick(Symbol.SEVEN);
+            buttonEight.Click += (sender, e) => OnSymbolClick(Symbol.EIGHT);
+            buttonNine.Click += (sender, e) => OnSymbolClick(Symbol.NINE);
+            buttonPoint.Click += (sender, e) => OnSymbolClick(Symbol.POINT);
 
         }
     }

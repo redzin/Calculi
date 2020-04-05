@@ -3,7 +3,7 @@ using Android.Support.V4.App;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Calculi.Shared.Types;
+using Calculi.Literal.Types;
 
 namespace Calculi.Android2.Fragments
 {

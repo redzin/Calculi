@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Calculi.Support
 {
-    class Observable<T>
+    public class Observable<T>
     {
         public T Value { get; private set; }
         private readonly List<Subscription<T>> _subscriptions = new List<Subscription<T>>();
