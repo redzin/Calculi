@@ -24,6 +24,7 @@ namespace Calculi.Literal.Types
         MULTIPLY,
         DIVIDE,
         MODULO,
+        FACTORIAL,
         EXP,
         POWER,
         SQR,

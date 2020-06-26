@@ -19,7 +19,11 @@ namespace Calculi.Literal.Types
             this._symbols = symbols.AsReadOnly();
         }
 
-        public Symbol this[int index] { get => ((IList<Symbol>)_symbols)[index]; set => ((IList<Symbol>)_symbols)[index] = value; }
+        public Symbol this[int index]
+        {
+            get => ((IList<Symbol>)_symbols)[index];
+            set => ((IList<Symbol>)_symbols)[index] = value;
+        }
 
         public int Count => ((IList<Symbol>)_symbols).Count;
 

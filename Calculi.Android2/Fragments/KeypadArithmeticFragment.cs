@@ -32,6 +32,7 @@ namespace Calculi.Android2.Fragments
             TextView buttonMultiplication = (TextView)Activity.FindViewById(Resource.Id.keypadMultiplication);
             TextView buttonSubtraction = (TextView)Activity.FindViewById(Resource.Id.keypadSubtraction);
             TextView buttonAddition = (TextView)Activity.FindViewById(Resource.Id.keypadAddition);
+            //TextView buttonFactorial = (TextView)Activity.FindViewById(Resource.Id.keypadFactorial);
             TextView buttonEnter = (TextView)Activity.FindViewById(Resource.Id.keypadEnter);
             TextView buttonDelete = (TextView)Activity.FindViewById(Resource.Id.keypadDelete);
             TextView buttonClear = (TextView)Activity.FindViewById(Resource.Id.keypadClear);
@@ -43,6 +44,7 @@ namespace Calculi.Android2.Fragments
             buttonMultiplication.Click += (sender, e) => OnSymbolClick(Symbol.MULTIPLY);
             buttonSubtraction.Click += (sender, e) => OnSymbolClick(Symbol.SUBTRACT);
             buttonAddition.Click += (sender, e) => OnSymbolClick(Symbol.ADD);
+            //buttonFactorial.Click += (sender, e) => OnSymbolClick(Symbol.FACTORIAL);
 
         }
     }

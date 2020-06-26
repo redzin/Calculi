@@ -28,6 +28,7 @@
   <string name="button_power">x&#696;</string>
   <string name="button_root">root</string>
   <string name="button_factorial">n!</string>
+  <string name="button_percent">%</string>
 
   <!-- Meta functions -->
   <string name="button_delete">&#9003;</string>
