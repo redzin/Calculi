@@ -75,7 +75,7 @@ namespace Calculi.Literal.Extensions
 
                 Calculator newCalc = Calculator.Mutate(calculator, expression: new Expression(symbols));
 
-                if (Symbols.LeftParenthesisEquivalents.Contains(removedSymbol) && newCalc.Expression[calculator.CursorPositionStart - 1].Equals(Symbol.RIGHT_PARENTHESIS))
+                if (Symbols.LeftParenthesisEquivalents.Contains(removedSymbol) && newCalc.Expression.Count > 0 && newCalc.Expression[calculator.CursorPositionStart - 1].Equals(Symbol.RIGHT_PARENTHESIS))
                 {
 
                     Func<double> a = () =>
