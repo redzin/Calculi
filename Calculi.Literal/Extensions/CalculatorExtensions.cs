@@ -77,16 +77,9 @@ namespace Calculi.Literal.Extensions
 
                 if (Symbols.LeftParenthesisEquivalents.Contains(removedSymbol) && newCalc.Expression.Count > 0 && newCalc.Expression[calculator.CursorPositionStart - 1].Equals(Symbol.RIGHT_PARENTHESIS))
                 {
-
-                    Func<double> a = () =>
-                    {
-                        double d = newCalc.Expression.ParseToDouble();
-                        return d;
-                    };
-
-                    return new Try<double>(a).Result.Match(
-                        left: (exception) => newCalc.RemoveSymbol(),
-                        right: (d => newCalc.DecrementPosition())
+                    return new Try<double>(() => newCalc.Expression.ParseToDouble()).Result.Match(
+                        left: exception => newCalc.RemoveSymbol(),
+                        right: _ => newCalc.DecrementPosition()
                     );
                 }
 
