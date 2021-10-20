@@ -53,5 +53,10 @@ namespace Calculi.Literal.Types
         {
             return ExpressionExtensions.ToString(this);
         }
+
+        public static Expression FromDouble(double value)
+        {
+            return Converters.StringToExpression(value.ToString("0." + new string('#', 339)));
+        }
     }
 }

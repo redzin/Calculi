@@ -102,15 +102,16 @@ namespace Calculi.Literal.Extensions
 
             return new Try<Calculator>(() =>
             {
-                    ExpressionCalculationPair entry = new ExpressionCalculationPair(
-                        calculator.Expression,
-                        calculator.Expression.ParseToCalculation(calculator.History.Count > 0 ? calculator.History.Last().Calculation : null)
-                    );
-                    List<ExpressionCalculationPair> newHistory = new List<ExpressionCalculationPair>(calculator.History)
-                    {
-                        entry
-                    };
-                    return Calculator.Mutate(calculator, history: newHistory.AsReadOnly()).ClearExpression();
+                ExpressionCalculationPair entry = new ExpressionCalculationPair(
+                    calculator.Expression,
+                    calculator.Expression.ParseToCalculation(calculator.History.Count > 0 ? calculator.History.Last().Calculation : null)
+                );
+                List<ExpressionCalculationPair> newHistory = new List<ExpressionCalculationPair>(calculator.History)
+                {
+                    entry
+                };
+
+                return Calculator.Mutate(calculator, entry.Calculation.ToDouble().ToExpression(), history: newHistory.AsReadOnly());
                 
             }).Result;
 

@@ -14,6 +14,11 @@ namespace Calculi.Literal.Extensions
             return calculation.Function(calculation.Children.Select(child => child.ToDouble()).ToList());
         }
 
+        public static Expression ToExpression(this Double value)
+        {
+            return Expression.FromDouble(value);
+        }
+
         public static string ToString(this Calculation calculation)
         {
             return calculation.ToDouble().ToString(CultureInfo.InvariantCulture);
