@@ -182,6 +182,7 @@ namespace Calculi.Literal.Parsing
             (expression, history) =>
             {
                 Symbol operation = expression.Count > 0 ? expression.First() : Symbol.EOF;
+
                 switch (operation)
                 {
 
@@ -194,22 +195,22 @@ namespace Calculi.Literal.Parsing
                     case Symbol.SQRT:
                         return ParseParenthesisHelper(expression, history, x => Math.Sqrt(x[0]));
                     case Symbol.SINE:
-                        return ParseParenthesisHelper(expression, history, x => Math.Sin(x[0]));
+                        return ParseParenthesisHelper(expression, history, x => CalculiMath.Sin(x[0]));
                     case Symbol.COSINE:
-                        return ParseParenthesisHelper(expression, history, x => Math.Cos(x[0]));
+                        return ParseParenthesisHelper(expression, history, x => CalculiMath.Cos(x[0]));
                     case Symbol.TANGENT:
-                        return ParseParenthesisHelper(expression, history, x => Math.Tan(x[0]));
+                        return ParseParenthesisHelper(expression, history, x => CalculiMath.Tan(x[0]));
                     case Symbol.SECANT:
-                        return ParseParenthesisHelper(expression, history, x => 1 / Math.Cos(x[0]));
+                        return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Cos(x[0]));
                     case Symbol.COSECANT:
-                        return ParseParenthesisHelper(expression, history, x => 1 / Math.Sin(x[0]));
+                        return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Sin(x[0]));
                     case Symbol.COTANGENT:
-                        return ParseParenthesisHelper(expression, history, x => 1 / Math.Tan(x[0]));
+                        return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Tan(x[0]));
                     case Symbol.LEFT_PARENTHESIS:
                         return ParseParenthesisHelper(expression, history, x => x[0]);
                 }
 
-                return ParsePoint(expression, history);
+                return ParseConstant(expression, history);
             };
 
         private static readonly Func<Expression, Calculation, Func<List<double>, double>, Calculation> ParseParenthesisHelper =
@@ -231,34 +232,52 @@ namespace Calculi.Literal.Parsing
                 );
             };
 
+        private static readonly Func<Expression, Calculation, Calculation> ParseConstant =
+            (expression, history) =>
+            {
+
+                List<Symbol> constants = expression.ToList().FindAll((s) => s == Symbol.PI || s == Symbol.EULER_CONSTANT);
+
+                if (constants.Count() > 0 && expression.Count > 1)
+                    throw new UserMessageException(Error.REAL_NUMBER_MIXED_WITH_CONSTANT);
+
+                if (constants.Count() > 1)
+                    throw new UserMessageException(Error.MULTIPLE_CONSTANTS);
+
+                switch (constants.FirstOrDefault())
+                {
+                    case Symbol.PI:
+                        return Calculation.FromConstant(Math.PI);
+                    case Symbol.EULER_CONSTANT:
+                        return Calculation.FromConstant(Math.E);
+                    default:
+                        return ParsePoint(expression, history);
+                }
+            };
+
         private static readonly Func<Expression, Calculation, Calculation> ParsePoint =
             (expression, history) =>
             {
-                Symbol operation = expression.ToList()
-                    .Find(symbol => symbol.Equals(Symbol.POINT) || symbol.Equals(Symbol.ANSWER));
-                switch (operation)
+                if (expression.Contains(Symbol.POINT))
                 {
-                    case Symbol.POINT:
-                        Expression lhs = expression.TakeWhile(symbol => !symbol.Equals(Symbol.POINT)).ToExpression();
-                        Expression rhs = expression.SkipWhile(symbol => !symbol.Equals(Symbol.POINT)).Skip(1)
-                            .ToExpression();
-                        if (lhs.Count == 0 && rhs.Count == 0)
-                        {
-                            throw new UserMessageException(Error.INVALID_POINT);
-                        }
+                    Expression lhs = expression.TakeWhile(symbol => !symbol.Equals(Symbol.POINT)).ToExpression();
+                    Expression rhs = expression.SkipWhile(symbol => !symbol.Equals(Symbol.POINT)).Skip(1)
+                        .ToExpression();
+                    if (lhs.Count == 0 && rhs.Count == 0)
+                    {
+                        throw new UserMessageException(Error.INVALID_POINT);
+                    }
 
-                        lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() { Symbol.ZERO });
-                        rhs = rhs.Count > 0 ? rhs : new Expression(new List<Symbol>() { Symbol.ZERO });
-                        return new Calculation(
-                            new List<Calculation>()
-                            {
+                    lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() { Symbol.ZERO });
+                    rhs = rhs.Count > 0 ? rhs : new Expression(new List<Symbol>() { Symbol.ZERO });
+                    return new Calculation(
+                        new List<Calculation>()
+                        {
                                 ParseInteger(lhs, history),
                                 ParseInteger(rhs, history)
-                            },
-                            a => a[0] + (a[1] / Math.Pow(10, (rhs.Count)))
-                        );
-                    case Symbol.ANSWER:
-                        return history;
+                        },
+                        a => a[0] + (a[1] / Math.Pow(10, (rhs.Count)))
+                    );
                 }
 
                 return ParseInteger(expression, history);

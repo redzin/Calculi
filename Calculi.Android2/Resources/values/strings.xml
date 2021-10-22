@@ -15,6 +15,10 @@
   <string name="button_9">9</string>
   <string name="button_point">.</string>
 
+  <!-- Numeric -->
+  <string name="button_pi">π</string>
+  <string name="button_e">e</string>
+  
   <!-- Arithmetic and algebra-->
   <string name="button_add">&#43;</string>
   <string name="button_subtract">&#8722;</string>
@@ -87,6 +91,8 @@
   <string name="symbol_secant">sec(</string>
   <string name="symbol_cosecant">csc(</string>
   <string name="symbol_cotangent">cot(</string>
+  <string name="symbol_pi">π</string>
+  <string name="symbol_euler_constant">e</string>
 
 
   <string name="history_get_result">Get result</string>

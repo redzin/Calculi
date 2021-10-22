@@ -22,7 +22,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_left_parenthesis"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp"/>
 
@@ -33,40 +33,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_right_parenthesis"
-      android:textSize="20dip"
-      android:textColor="@color/colorButtonTextQuaternary" 
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadSine"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_sine"
-      android:textSize="20dip"
-      android:textColor="@color/colorButtonTextQuaternary" 
-      android:padding="10dp" />
-
-    <TextView
-      android:id="@+id/keypadCosine"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_cosine"
-      android:textSize="20dip"
-      android:textColor="@color/colorButtonTextQuaternary" 
-      android:padding="10dp" />
-        
-    <TextView
-      android:id="@+id/keypadTangent"
-      android:layout_width="0dp"
-      android:layout_height="fill_parent"
-      android:layout_weight="1"
-      android:gravity="center|center"
-      android:text="@string/button_tangent"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
@@ -77,7 +44,51 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_modulo"
-      android:textSize="20dip"
+      android:textSize="16dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadSine"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_sine"
+      android:textSize="16dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadCosine"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_cosine"
+      android:textSize="16dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+        
+    <TextView
+      android:id="@+id/keypadTangent"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_tangent"
+      android:textSize="16dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadPi"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_pi"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
@@ -98,7 +109,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_ln"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
@@ -109,7 +120,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_log"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
@@ -120,7 +131,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_exponential"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
@@ -131,7 +142,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_power"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
         
@@ -142,7 +153,7 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_square"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
 
@@ -153,9 +164,22 @@
       android:layout_weight="1"
       android:gravity="center|center"
       android:text="@string/button_square_root"
-      android:textSize="20dip"
+      android:textSize="16dip"
       android:textColor="@color/colorButtonTextQuaternary" 
       android:padding="10dp" />
+
+    <TextView
+      android:id="@+id/keypadEuler"
+      android:layout_width="0dp"
+      android:layout_height="fill_parent"
+      android:layout_weight="1"
+      android:gravity="center|center"
+      android:text="@string/button_e"
+      android:textSize="16dip"
+      android:textColor="@color/colorButtonTextQuaternary" 
+      android:padding="10dp" />
+
+
   </LinearLayout>
 
 </LinearLayout>

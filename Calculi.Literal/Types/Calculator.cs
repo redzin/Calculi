@@ -31,10 +31,20 @@ namespace Calculi.Literal.Types
             int? cursorPositionEnd = null,
             ReadOnlyCollection<ExpressionCalculationPair> history = null)
         {
+            Expression newExpr = expression ?? source.Expression;
+            int newCursorPositionStart = cursorPositionStart ?? source.CursorPositionStart;
+            int newCursorPositionEnd = cursorPositionEnd ?? source.CursorPositionEnd;
+
+            newCursorPositionEnd = newCursorPositionEnd > newExpr.Count ? newExpr.Count : newCursorPositionEnd;
+            newCursorPositionStart = newCursorPositionStart < 0 ? 0 : newCursorPositionStart;
+
+            newCursorPositionStart = newCursorPositionStart > newCursorPositionEnd ? newCursorPositionEnd : newCursorPositionStart;
+            newCursorPositionEnd = newCursorPositionEnd < newCursorPositionStart ? newCursorPositionStart : newCursorPositionEnd;
+
             return new Calculator(
-                expression ?? source.Expression,
-                cursorPositionStart ?? source.CursorPositionStart,
-                cursorPositionEnd ?? source.CursorPositionEnd,
+                newExpr,
+                newCursorPositionStart,
+                newCursorPositionEnd,
                 history ?? source.History
             );
         }

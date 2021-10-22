@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ExpressionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\LinqExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymbolExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CalculiMath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Calculation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Calculator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Errors\Error.cs" />

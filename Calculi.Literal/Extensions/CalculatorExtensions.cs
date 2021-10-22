@@ -73,17 +73,21 @@ namespace Calculi.Literal.Extensions
                 Symbol removedSymbol = calculator.Expression[calculator.CursorPositionStart - 1];
                 symbols.RemoveAt(calculator.CursorPositionStart - 1);
 
-                Calculator newCalc = Calculator.Mutate(calculator, expression: new Expression(symbols));
+                Calculator newCalc = Calculator.Mutate(calculator, expression: new Expression(symbols), calculator.CursorPositionStart - 1, calculator.CursorPositionEnd - 1);
 
-                if (Symbols.LeftParenthesisEquivalents.Contains(removedSymbol) && newCalc.Expression.Count > 0 && newCalc.Expression[calculator.CursorPositionStart - 1].Equals(Symbol.RIGHT_PARENTHESIS))
+                if (Symbols.LeftParenthesisEquivalents.Contains(removedSymbol) &&
+                    newCalc.Expression.Count > 0 &&
+                    newCalc.CursorPositionEnd < newCalc.Expression.Count &&
+                    newCalc.Expression[newCalc.CursorPositionStart].Equals(Symbol.RIGHT_PARENTHESIS)
+                )
                 {
                     return new Try<double>(() => newCalc.Expression.ParseToDouble()).Result.Match(
-                        left: exception => newCalc.RemoveSymbol(),
-                        right: _ => newCalc.DecrementPosition()
+                        left: exception => newCalc.IncrementPosition().RemoveSymbol(),
+                        right: _ => newCalc
                     );
                 }
 
-                return newCalc.DecrementPosition();
+                return newCalc;
             }
         }
 

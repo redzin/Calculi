@@ -131,7 +131,9 @@ namespace Calculi.Android2
                 {Symbol.TANGENT, Resources.GetString(Resource.String.symbol_tangent) },
                 {Symbol.SECANT, Resources.GetString(Resource.String.symbol_secant) },
                 {Symbol.COSECANT, Resources.GetString(Resource.String.symbol_cosecant) },
-                {Symbol.COTANGENT, Resources.GetString(Resource.String.symbol_cotangent) }
+                {Symbol.COTANGENT, Resources.GetString(Resource.String.symbol_cotangent) },
+                {Symbol.PI, Resources.GetString(Resource.String.symbol_pi) },
+                {Symbol.EULER_CONSTANT, Resources.GetString(Resource.String.symbol_euler_constant) }
             };
             Converters.SymbolToString = symbol => symbolToStringDictionary[symbol];
 

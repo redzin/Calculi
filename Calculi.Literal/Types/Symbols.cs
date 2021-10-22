@@ -31,13 +31,15 @@ namespace Calculi.Literal.Types
         SQRT,
         LOGARITHM,
         NATURAL_LOGARITHM,
-        ANSWER,
+        ANSWER, // Deprecated
         SINE,
         COSINE,
         TANGENT,
         SECANT,
         COSECANT,
-        COTANGENT
+        COTANGENT,
+        PI,
+        EULER_CONSTANT
     }
     public static class Symbols
     {

@@ -43,6 +43,8 @@ namespace Calculi.Android2.Fragments
             TextView buttonCosine = (TextView)Activity.FindViewById(Resource.Id.keypadCosine);
             TextView buttonTan = (TextView)Activity.FindViewById(Resource.Id.keypadTangent);
             TextView buttonModulo = (TextView)Activity.FindViewById(Resource.Id.keypadModulo);
+            TextView buttonPi = (TextView)Activity.FindViewById(Resource.Id.keypadPi);
+            TextView buttonEuler = (TextView)Activity.FindViewById(Resource.Id.keypadEuler);
 
             buttonLeftParenthesis.Click += (sender, e) => OnSymbolClick(Symbol.LEFT_PARENTHESIS);
             buttonRightParenthesis.Click += (sender, e) => OnSymbolClick(Symbol.RIGHT_PARENTHESIS);
@@ -56,6 +58,8 @@ namespace Calculi.Android2.Fragments
             buttonSine.Click += (sender, e) => OnSymbolClick(Symbol.SINE);
             buttonCosine.Click += (sender, e) => OnSymbolClick(Symbol.COSINE);
             buttonTan.Click += (sender, e) => OnSymbolClick(Symbol.TANGENT);
+            buttonPi.Click += (sender, e) => OnSymbolClick(Symbol.PI);
+            buttonEuler.Click += (sender, e) => OnSymbolClick(Symbol.EULER_CONSTANT);
         }
     }
 }

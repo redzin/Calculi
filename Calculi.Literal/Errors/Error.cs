@@ -15,6 +15,8 @@ namespace Calculi.Literal.Errors
         DIVISION_BY_ZERO,
         INVALID_POINT,
         COULD_NOT_INSERT,
+        REAL_NUMBER_MIXED_WITH_CONSTANT,
+        MULTIPLE_CONSTANTS,
         UNKNOWN_ERROR
     }
 }
