@@ -33,14 +33,14 @@ namespace Calculi.Literal.Extensions
 
         public static Calculator InsertSymbol(this Calculator calculator, Symbol symbol)
         {
-            List<Symbol> symbols = calculator.Expression.ToList();
-
             if (calculator.CursorPositionStart != calculator.CursorPositionEnd)
             {
                 calculator = calculator.RemoveSymbol();
             }
 
+            List<Symbol> symbols = calculator.Expression.ToList();
             symbols.Insert(calculator.CursorPositionStart, symbol);
+
             Calculator newCalc = Calculator.Mutate(calculator, expression: new Expression(symbols)).IncrementPosition();
 
             if (Symbols.LeftParenthesisEquivalents.Contains(symbol))
@@ -56,17 +56,17 @@ namespace Calculi.Literal.Extensions
 
         public static Calculator RemoveSymbol(this Calculator calculator)
         {
-            if (calculator.CursorPositionStart > calculator.Expression.Count || calculator.CursorPositionEnd == 0)
-            {
+            if (calculator.CursorPositionStart > calculator.Expression.Count)
+                return Calculator.Mutate(calculator, cursorPositionStart: calculator.CursorPositionStart, cursorPositionEnd: calculator.CursorPositionStart);
+            if (calculator.CursorPositionEnd == 0)
                 return calculator;
-            }
-
+ 
             List<Symbol> symbols = calculator.Expression.ToList();
 
             if (calculator.CursorPositionStart != calculator.CursorPositionEnd)
             {
                 symbols.RemoveRange(calculator.CursorPositionStart, calculator.CursorPositionEnd - calculator.CursorPositionStart);
-                return Calculator.Mutate(calculator, expression: new Expression(symbols)).DecrementPosition();
+                return Calculator.Mutate(calculator, expression: new Expression(symbols), cursorPositionStart: calculator.CursorPositionStart, cursorPositionEnd: calculator.CursorPositionStart);
             }
             else
             {
@@ -115,7 +115,9 @@ namespace Calculi.Literal.Extensions
                     entry
                 };
 
-                return Calculator.Mutate(calculator, entry.Calculation.ToDouble().ToExpression(), history: newHistory.AsReadOnly());
+                Expression newExpression = entry.Calculation.ToDouble().ToExpression();
+
+                return Calculator.Mutate(calculator, newExpression, newExpression.Count, newExpression.Count, history: newHistory.AsReadOnly());
                 
             }).Result;
 

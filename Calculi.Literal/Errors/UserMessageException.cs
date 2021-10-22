@@ -6,9 +6,11 @@ namespace Calculi.Literal.Errors
 {
     class UserMessageException : Exception
     {
-        public UserMessageException(Error error) : base(error.ToString())
-        {
+        public ErrorCode Error { get; private set; }
 
+        public UserMessageException(ErrorCode error)
+        {
+            Error = error;
         }
     }
 }

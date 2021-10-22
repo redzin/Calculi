@@ -20,7 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CalculiMath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Calculation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Calculator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Errors\Error.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Errors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Expression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ExpressionCalculationPair.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Symbols.cs" />

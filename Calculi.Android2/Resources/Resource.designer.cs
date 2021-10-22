@@ -4590,145 +4590,181 @@ namespace Calculi.Android2
 			public const int character_counter_pattern = 2131558485;
 			
 			// aapt resource value: 0x7F0D0056
-			public const int fab_transformation_scrim_behavior = 2131558486;
+			public const int errorCouldNotInsertSymbol = 2131558486;
 			
 			// aapt resource value: 0x7F0D0057
-			public const int fab_transformation_sheet_behavior = 2131558487;
+			public const int errorDivisionByZero = 2131558487;
 			
 			// aapt resource value: 0x7F0D0058
-			public const int hide_bottom_view_on_scroll_behavior = 2131558488;
+			public const int errorEmptyExpression = 2131558488;
 			
 			// aapt resource value: 0x7F0D0059
-			public const int history_get_expression = 2131558489;
+			public const int errorInvalidPoint = 2131558489;
 			
 			// aapt resource value: 0x7F0D005A
-			public const int history_get_result = 2131558490;
+			public const int errorMismatchingParentheses = 2131558490;
 			
 			// aapt resource value: 0x7F0D005B
-			public const int mtrl_chip_close_icon_content_description = 2131558491;
+			public const int errorMissingDenominator = 2131558491;
 			
 			// aapt resource value: 0x7F0D005C
-			public const int outputFragmentDefault = 2131558492;
+			public const int errorMissingFactor = 2131558492;
 			
 			// aapt resource value: 0x7F0D005D
-			public const int password_toggle_content_description = 2131558493;
+			public const int errorMissingNumerator = 2131558493;
 			
 			// aapt resource value: 0x7F0D005E
-			public const int path_password_eye = 2131558494;
+			public const int errorMissingTerm = 2131558494;
 			
 			// aapt resource value: 0x7F0D005F
-			public const int path_password_eye_mask_strike_through = 2131558495;
+			public const int errorMultipleConstants = 2131558495;
 			
 			// aapt resource value: 0x7F0D0060
-			public const int path_password_eye_mask_visible = 2131558496;
+			public const int errorRealNumberMixedWithConstant = 2131558496;
 			
 			// aapt resource value: 0x7F0D0061
-			public const int path_password_strike_through = 2131558497;
+			public const int errorUnknown = 2131558497;
 			
 			// aapt resource value: 0x7F0D0062
-			public const int search_menu_title = 2131558498;
+			public const int fab_transformation_scrim_behavior = 2131558498;
 			
 			// aapt resource value: 0x7F0D0063
-			public const int status_bar_notification_info_overflow = 2131558499;
+			public const int fab_transformation_sheet_behavior = 2131558499;
 			
 			// aapt resource value: 0x7F0D0064
-			public const int symbol_0 = 2131558500;
+			public const int hide_bottom_view_on_scroll_behavior = 2131558500;
 			
 			// aapt resource value: 0x7F0D0065
-			public const int symbol_1 = 2131558501;
+			public const int history_get_expression = 2131558501;
 			
 			// aapt resource value: 0x7F0D0066
-			public const int symbol_2 = 2131558502;
+			public const int history_get_result = 2131558502;
 			
 			// aapt resource value: 0x7F0D0067
-			public const int symbol_3 = 2131558503;
+			public const int mtrl_chip_close_icon_content_description = 2131558503;
 			
 			// aapt resource value: 0x7F0D0068
-			public const int symbol_4 = 2131558504;
+			public const int outputFragmentDefault = 2131558504;
 			
 			// aapt resource value: 0x7F0D0069
-			public const int symbol_5 = 2131558505;
+			public const int password_toggle_content_description = 2131558505;
 			
 			// aapt resource value: 0x7F0D006A
-			public const int symbol_6 = 2131558506;
+			public const int path_password_eye = 2131558506;
 			
 			// aapt resource value: 0x7F0D006B
-			public const int symbol_7 = 2131558507;
+			public const int path_password_eye_mask_strike_through = 2131558507;
 			
 			// aapt resource value: 0x7F0D006C
-			public const int symbol_8 = 2131558508;
+			public const int path_password_eye_mask_visible = 2131558508;
 			
 			// aapt resource value: 0x7F0D006D
-			public const int symbol_9 = 2131558509;
+			public const int path_password_strike_through = 2131558509;
 			
 			// aapt resource value: 0x7F0D006E
-			public const int symbol_add = 2131558510;
+			public const int search_menu_title = 2131558510;
 			
 			// aapt resource value: 0x7F0D006F
-			public const int symbol_answer = 2131558511;
+			public const int status_bar_notification_info_overflow = 2131558511;
 			
 			// aapt resource value: 0x7F0D0070
-			public const int symbol_cosecant = 2131558512;
+			public const int symbol_0 = 2131558512;
 			
 			// aapt resource value: 0x7F0D0071
-			public const int symbol_cosine = 2131558513;
+			public const int symbol_1 = 2131558513;
 			
 			// aapt resource value: 0x7F0D0072
-			public const int symbol_cotangent = 2131558514;
+			public const int symbol_2 = 2131558514;
 			
 			// aapt resource value: 0x7F0D0073
-			public const int symbol_divide = 2131558515;
+			public const int symbol_3 = 2131558515;
 			
 			// aapt resource value: 0x7F0D0074
-			public const int symbol_euler_constant = 2131558516;
+			public const int symbol_4 = 2131558516;
 			
 			// aapt resource value: 0x7F0D0075
-			public const int symbol_exponential = 2131558517;
+			public const int symbol_5 = 2131558517;
 			
 			// aapt resource value: 0x7F0D0076
-			public const int symbol_left_parenthesis = 2131558518;
+			public const int symbol_6 = 2131558518;
 			
 			// aapt resource value: 0x7F0D0077
-			public const int symbol_logarithm = 2131558519;
+			public const int symbol_7 = 2131558519;
 			
 			// aapt resource value: 0x7F0D0078
-			public const int symbol_modulo = 2131558520;
+			public const int symbol_8 = 2131558520;
 			
 			// aapt resource value: 0x7F0D0079
-			public const int symbol_multiply = 2131558521;
+			public const int symbol_9 = 2131558521;
 			
 			// aapt resource value: 0x7F0D007A
-			public const int symbol_natural_logarithm = 2131558522;
+			public const int symbol_add = 2131558522;
 			
 			// aapt resource value: 0x7F0D007B
-			public const int symbol_pi = 2131558523;
+			public const int symbol_answer = 2131558523;
 			
 			// aapt resource value: 0x7F0D007C
-			public const int symbol_point = 2131558524;
+			public const int symbol_cosecant = 2131558524;
 			
 			// aapt resource value: 0x7F0D007D
-			public const int symbol_power = 2131558525;
+			public const int symbol_cosine = 2131558525;
 			
 			// aapt resource value: 0x7F0D007E
-			public const int symbol_right_parenthesis = 2131558526;
+			public const int symbol_cotangent = 2131558526;
 			
 			// aapt resource value: 0x7F0D007F
-			public const int symbol_secant = 2131558527;
+			public const int symbol_divide = 2131558527;
 			
 			// aapt resource value: 0x7F0D0080
-			public const int symbol_sine = 2131558528;
+			public const int symbol_euler_constant = 2131558528;
 			
 			// aapt resource value: 0x7F0D0081
-			public const int symbol_sqr = 2131558529;
+			public const int symbol_exponential = 2131558529;
 			
 			// aapt resource value: 0x7F0D0082
-			public const int symbol_sqrt = 2131558530;
+			public const int symbol_left_parenthesis = 2131558530;
 			
 			// aapt resource value: 0x7F0D0083
-			public const int symbol_subtract = 2131558531;
+			public const int symbol_logarithm = 2131558531;
 			
 			// aapt resource value: 0x7F0D0084
-			public const int symbol_tangent = 2131558532;
+			public const int symbol_modulo = 2131558532;
+			
+			// aapt resource value: 0x7F0D0085
+			public const int symbol_multiply = 2131558533;
+			
+			// aapt resource value: 0x7F0D0086
+			public const int symbol_natural_logarithm = 2131558534;
+			
+			// aapt resource value: 0x7F0D0087
+			public const int symbol_pi = 2131558535;
+			
+			// aapt resource value: 0x7F0D0088
+			public const int symbol_point = 2131558536;
+			
+			// aapt resource value: 0x7F0D0089
+			public const int symbol_power = 2131558537;
+			
+			// aapt resource value: 0x7F0D008A
+			public const int symbol_right_parenthesis = 2131558538;
+			
+			// aapt resource value: 0x7F0D008B
+			public const int symbol_secant = 2131558539;
+			
+			// aapt resource value: 0x7F0D008C
+			public const int symbol_sine = 2131558540;
+			
+			// aapt resource value: 0x7F0D008D
+			public const int symbol_sqr = 2131558541;
+			
+			// aapt resource value: 0x7F0D008E
+			public const int symbol_sqrt = 2131558542;
+			
+			// aapt resource value: 0x7F0D008F
+			public const int symbol_subtract = 2131558543;
+			
+			// aapt resource value: 0x7F0D0090
+			public const int symbol_tangent = 2131558544;
 			
 			static String()
 			{

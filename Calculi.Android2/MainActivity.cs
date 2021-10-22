@@ -66,6 +66,21 @@ namespace Calculi.Android2
             });
         }
 
+        private static Dictionary<ErrorCode, int> UserMessageExceptions = new Dictionary<ErrorCode, int>() {
+            { ErrorCode.EMPTY_EXPRESSION, Resource.String.errorEmptyExpression },
+            { ErrorCode.MISMATCHING_PARENTHESIS, Resource.String.errorMismatchingParentheses },
+            { ErrorCode.MISSING_TERM, Resource.String.errorMissingTerm },
+            { ErrorCode.MISSING_FACTOR, Resource.String.errorMissingFactor },
+            { ErrorCode.MISSING_NUMERATOR, Resource.String.errorMissingNumerator },
+            { ErrorCode.MISSING_DENOMINATOR, Resource.String.errorMissingDenominator },
+            { ErrorCode.DIVISION_BY_ZERO, Resource.String.errorDivisionByZero },
+            { ErrorCode.INVALID_POINT, Resource.String.errorInvalidPoint },
+            { ErrorCode.COULD_NOT_INSERT, Resource.String.errorCouldNotInsertSymbol },
+            { ErrorCode.REAL_NUMBER_MIXED_WITH_CONSTANT, Resource.String.errorRealNumberMixedWithConstant },
+            { ErrorCode.MULTIPLE_CONSTANTS, Resource.String.errorMultipleConstants },
+            { ErrorCode.UNKNOWN_ERROR, Resource.String.errorUnknown }
+        };
+
         private void SetUIBindings()
         {
             Action<Symbol> insertSymbol = symbol => { Calculator.Next(Calculator.Value.InsertSymbol(symbol)); };
@@ -83,7 +98,10 @@ namespace Calculi.Android2
                     {
                         if (e is UserMessageException)
                         {
-                            // show user message in pop-up notification
+
+                            Toast t = Toast.MakeText(BaseContext, UserMessageExceptions[((UserMessageException)e).Error], ToastLength.Long);
+                            t.Show();
+
                         }
                     },
                     right: calculator => { Calculator.Next(calculator); }

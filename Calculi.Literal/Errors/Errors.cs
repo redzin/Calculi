@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Calculi.Literal.Errors
 {
-    enum Error
+    enum ErrorCode
     {
         EMPTY_EXPRESSION,
         MISMATCHING_PARENTHESIS,

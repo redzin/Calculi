@@ -97,5 +97,22 @@
 
   <string name="history_get_result">Get result</string>
   <string name="history_get_expression">Get expression</string>
-  
+
+  <!-- Error Messages -->
+  <string name="errorCouldNotInsertSymbol">Could not insert symbol</string>
+  <string name="errorEmptyExpression">Empty expression</string>
+  <string name="errorMismatchingParentheses">Mismatching parentheses</string>
+  <string name="errorMissingTerm">Missing term</string>
+  <string name="errorMissingFactor">Missing factor</string>
+  <string name="errorMissingNumerator">Missing numerator</string>
+  <string name="errorMissingDenominator">Missing denominator</string>
+  <string name="errorDivisionByZero">Cannot divide by zero</string>
+  <string name="errorInvalidPoint">Invalid decimal point</string>
+  <string name="errorRealNumberMixedWithConstant">Cannot evaluate number</string>
+  <string name="errorMultipleConstants">Cannot evaluate constants</string>
+  <string name="errorUnknown">An error occured</string>
+
+
+
+
 </resources>

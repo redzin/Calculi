@@ -18,7 +18,7 @@ namespace Calculi.Literal.Parsing
             {
                 if (expression.Count == 0)
                 {
-                    throw new UserMessageException(Error.EMPTY_EXPRESSION);
+                    throw new UserMessageException(ErrorCode.EMPTY_EXPRESSION);
                 }
                 return ParseTerms(expression, history);
             };
@@ -28,7 +28,7 @@ namespace Calculi.Literal.Parsing
             {
                 if (expression.Count == 0)
                 {
-                    throw new UserMessageException(Error.MISSING_TERM);
+                    throw new UserMessageException(ErrorCode.MISSING_TERM);
                 }
 
                 int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
@@ -67,7 +67,7 @@ namespace Calculi.Literal.Parsing
             {
                 if (expression.Count == 0)
                 {
-                    throw new UserMessageException(Error.MISSING_FACTOR);
+                    throw new UserMessageException(ErrorCode.MISSING_FACTOR);
                 }
 
                 int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
@@ -128,7 +128,7 @@ namespace Calculi.Literal.Parsing
             {
                 //if (expression.Count == 0)
                 //{
-                //    throw new UserMessageException(Error.MISSING_DIVISION);
+                //    throw new UserMessageException(CalculationError.MISSING_DIVISION);
                 //}
 
                 int symbolIndex =
@@ -146,30 +146,30 @@ namespace Calculi.Literal.Parsing
                                         ParseDivision(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),history))
                                             .Result
                                             .Match(
-                                                left: (e) => throw new UserMessageException(Error.MISSING_NUMERATOR),
+                                                left: (e) => throw new UserMessageException(ErrorCode.MISSING_NUMERATOR),
                                                 right: (child) => children.Add(child)
                                             );
                                     new Try<Calculation>(() =>
                                         ParseDivision(expression.Where((symbol, index) => index > symbolIndex).ToExpression(), history))
                                             .Result
                                             .Match(
-                                                left: (e) => throw new UserMessageException(Error.MISSING_DENOMINATOR),
+                                                left: (e) => throw new UserMessageException(ErrorCode.MISSING_DENOMINATOR),
                                                 right: (child) => children.Add(child)
                                             );
                                     return children;
 
                                 })
                                 .Result.Match(
-                                    left: (e) => throw new UserMessageException(Error.MISSING_FACTOR),
+                                    left: (e) => throw new UserMessageException(ErrorCode.MISSING_FACTOR),
                                     right: (children) => children
                                 ),
                             a =>
                             {
                                 return new Try<double>(() =>
                                 {
-                                    return a[1] != 0 ? a[0] / a[1] : throw new UserMessageException(Error.DIVISION_BY_ZERO);
+                                    return a[1] != 0 ? a[0] / a[1] : throw new UserMessageException(ErrorCode.DIVISION_BY_ZERO);
                                 }).Result.Match(
-                                    left: (e) => throw new UserMessageException(Error.UNKNOWN_ERROR),
+                                    left: (e) => throw new UserMessageException(ErrorCode.UNKNOWN_ERROR),
                                     right: (result) => result
                                 );
                             });
@@ -218,7 +218,7 @@ namespace Calculi.Literal.Parsing
             {
                 if (expression.Count < 3 || !expression.Last().Equals(Symbol.RIGHT_PARENTHESIS))
                 {
-                    throw new UserMessageException(Error.MISMATCHING_PARENTHESIS);
+                    throw new UserMessageException(ErrorCode.MISMATCHING_PARENTHESIS);
                 }
                 return new Calculation(
                     new List<Calculation>()
@@ -239,10 +239,10 @@ namespace Calculi.Literal.Parsing
                 List<Symbol> constants = expression.ToList().FindAll((s) => s == Symbol.PI || s == Symbol.EULER_CONSTANT);
 
                 if (constants.Count() > 0 && expression.Count > 1)
-                    throw new UserMessageException(Error.REAL_NUMBER_MIXED_WITH_CONSTANT);
+                    throw new UserMessageException(ErrorCode.REAL_NUMBER_MIXED_WITH_CONSTANT);
 
                 if (constants.Count() > 1)
-                    throw new UserMessageException(Error.MULTIPLE_CONSTANTS);
+                    throw new UserMessageException(ErrorCode.MULTIPLE_CONSTANTS);
 
                 switch (constants.FirstOrDefault())
                 {
@@ -265,7 +265,7 @@ namespace Calculi.Literal.Parsing
                         .ToExpression();
                     if (lhs.Count == 0 && rhs.Count == 0)
                     {
-                        throw new UserMessageException(Error.INVALID_POINT);
+                        throw new UserMessageException(ErrorCode.INVALID_POINT);
                     }
 
                     lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() { Symbol.ZERO });
@@ -318,7 +318,7 @@ namespace Calculi.Literal.Parsing
 
                 if (scope != 0)
                 {
-                    throw new UserMessageException(Error.MISMATCHING_PARENTHESIS);
+                    throw new UserMessageException(ErrorCode.MISMATCHING_PARENTHESIS);
                 }
 
                 return scopeMarker;
