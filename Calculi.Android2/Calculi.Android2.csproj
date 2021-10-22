@@ -64,7 +64,6 @@
     <Compile Include="Fragments\KeypadArithmeticFragment.cs" />
     <Compile Include="Fragments\KeypadFragment.cs" />
     <Compile Include="Fragments\OutputPreviewFragment.cs" />
-    <Compile Include="Fragments\HelloWorldFragment.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
