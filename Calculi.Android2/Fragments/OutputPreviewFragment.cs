@@ -42,8 +42,8 @@ namespace Calculi.Android2.Fragments
             {
                 OutputView.Text = expression.ToString();
                 expression.ParseToString().Match(
-                    left: e => PreviewView.Text = "",   
-                    right: (s) => PreviewView.Text = s
+                    success: (s) => PreviewView.Text = s,
+                    error: e => PreviewView.Text = ""
                 );
             });
         }

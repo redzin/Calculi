@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Calculi.Literal.Types;
+using Calculi.Support;
 
 namespace Calculi.Literal.Extensions
 {
-    static class LinqExtensions
+    public static class LinqExtensions
     {
         public static IEnumerable<T> AllButLast<T>(this IEnumerable<T> enumerable)
         {
@@ -21,9 +22,12 @@ namespace Calculi.Literal.Extensions
             }
         }
 
-        public static Expression ToExpression(this IEnumerable<Symbol> symbols)
+        public static Option<Expression> ToExpression(this IEnumerable<Symbol> symbols)
         {
-            return new Expression(symbols.ToList());
+            if (symbols.Count() > 0)
+                return new Expression(symbols.ToList());
+            else
+                return Option.None<Expression>();
         }
     }
 }

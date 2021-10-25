@@ -45,9 +45,13 @@ namespace Calculi.Literal.Extensions
 
             if (Symbols.LeftParenthesisEquivalents.Contains(symbol))
             {
-                return new Try<double>(() => newCalc.Expression.ParseToDouble()).Result.Match(
-                    left: (exception => newCalc.InsertSymbol(Symbol.RIGHT_PARENTHESIS).DecrementPosition()),
-                    right: (d => newCalc)
+                return newCalc.Expression.ParseToDouble().Result.Match(
+                    left: d => {
+                        return newCalc;
+                    },
+                    right: e => {
+                        return newCalc.InsertSymbol(Symbol.RIGHT_PARENTHESIS).DecrementPosition();
+                    }
                 );
             }
 
@@ -81,9 +85,9 @@ namespace Calculi.Literal.Extensions
                     newCalc.Expression[newCalc.CursorPositionStart].Equals(Symbol.RIGHT_PARENTHESIS)
                 )
                 {
-                    return new Try<double>(() => newCalc.Expression.ParseToDouble()).Result.Match(
-                        left: exception => newCalc.IncrementPosition().RemoveSymbol(),
-                        right: _ => newCalc
+                    return newCalc.Expression.ParseToDouble().Result.Match(
+                        left: _ => newCalc,
+                        right: e => newCalc.IncrementPosition().RemoveSymbol()
                     );
                 }
 
@@ -101,14 +105,13 @@ namespace Calculi.Literal.Extensions
             return Calculator.Mutate(calculator, history: (new List<ExpressionCalculationPair>()).AsReadOnly());
         }
 
-        public static Either<Exception, Calculator> MoveInputToHistory(this Calculator calculator)
+        public static Try<Calculator> MoveInputToHistory(this Calculator calculator)
         {
-
-            return new Try<Calculator>(() =>
+            return Try.Invoke(() =>
             {
                 ExpressionCalculationPair entry = new ExpressionCalculationPair(
                     calculator.Expression,
-                    calculator.Expression.ParseToCalculation(calculator.History.Count > 0 ? calculator.History.Last().Calculation : null)
+                    calculator.Expression.ParseToCalculation(calculator.History.Count > 0 ? calculator.History.Last().Calculation : null).Unwrap()
                 );
                 List<ExpressionCalculationPair> newHistory = new List<ExpressionCalculationPair>(calculator.History)
                 {
@@ -118,8 +121,7 @@ namespace Calculi.Literal.Extensions
                 Expression newExpression = entry.Calculation.ToDouble().ToExpression();
 
                 return Calculator.Mutate(calculator, newExpression, newExpression.Count, newExpression.Count, history: newHistory.AsReadOnly());
-                
-            }).Result;
+            });
 
         }
         

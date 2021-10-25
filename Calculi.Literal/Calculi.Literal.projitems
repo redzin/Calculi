@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Converters.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Errors\UserMessageException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Errors\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExpressionParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\CalculationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\CalculatorExtensions.cs" />

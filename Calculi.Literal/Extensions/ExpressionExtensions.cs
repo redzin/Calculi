@@ -8,21 +8,21 @@ namespace Calculi.Literal.Extensions
 {
     static class ExpressionExtensions
     {
-        public static Calculation ParseToCalculation(this Expression expression)
+        public static Try<Calculation> ParseToCalculation(this Expression expression)
         {
             return ExpressionParser.Parse(expression, null);
         }
-        public static Calculation ParseToCalculation(this Expression expression, Calculation history)
+        public static Try<Calculation> ParseToCalculation(this Expression expression, Calculation history)
         {
             return ExpressionParser.Parse(expression, history);
         }
-        public static double ParseToDouble(this Expression expression)
+        public static Try<double> ParseToDouble(this Expression expression)
         {
-            return expression.ParseToCalculation().ToDouble();
+            return Try.Invoke(() => expression.ParseToCalculation().Unwrap().ToDouble());
         }
-        public static Either<Exception, string> ParseToString(this Expression expression)
+        public static Try<string> ParseToString(this Expression expression)
         {
-            return new Try<string>(() => expression.ParseToDouble().ToString(CultureInfo.InvariantCulture)).Result;
+            return Try.Invoke(() => expression.ParseToDouble().Unwrap().ToString(CultureInfo.InvariantCulture));
         }
         public static string ToString(this Expression expression)
         {

@@ -66,7 +66,7 @@ namespace Calculi.Android2
             });
         }
 
-        private static Dictionary<ErrorCode, int> UserMessageExceptions = new Dictionary<ErrorCode, int>() {
+        private static Dictionary<ErrorCode, int> Errors = new Dictionary<ErrorCode, int>() {
             { ErrorCode.EMPTY_EXPRESSION, Resource.String.errorEmptyExpression },
             { ErrorCode.MISMATCHING_PARENTHESIS, Resource.String.errorMismatchingParentheses },
             { ErrorCode.MISSING_TERM, Resource.String.errorMissingTerm },
@@ -94,17 +94,17 @@ namespace Calculi.Android2
             _keypadArithmeticFragment.OnEnterClick += () =>
             {
                 Calculator.Value.MoveInputToHistory().Match(
-                    left: e =>
+                    success: calculator => { Calculator.Next(calculator); },
+                    error: e =>
                     {
-                        if (e is UserMessageException)
+                        if (e is Exception)
                         {
 
-                            Toast t = Toast.MakeText(BaseContext, UserMessageExceptions[((UserMessageException)e).Error], ToastLength.Long);
+                            Toast t = Toast.MakeText(BaseContext, Errors[((Error)e).Code], ToastLength.Long);
                             t.Show();
 
                         }
-                    },
-                    right: calculator => { Calculator.Next(calculator); }
+                    }
                 );
             };
         }

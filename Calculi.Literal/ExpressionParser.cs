@@ -10,346 +10,271 @@ namespace Calculi.Literal.Parsing
 {
     static class ExpressionParser
     {
-        public static readonly Func<Expression, Calculation, Calculation> Parse =
-            (expression, history) => ParseExpression(expression, history);
+        public static Try<Calculation> Parse(Expression expression, Calculation history)
+        {
+            return Try.Invoke(() => ParseExpression(expression, history));
+        }
 
-        private static readonly Func<Expression, Calculation, Calculation> ParseExpression =
-            (expression, history) =>
+        private static Calculation ParseExpression(Expression expression, Calculation history)
+        {
+            if (expression.Count == 0)
+                throw new Error(ErrorCode.EMPTY_EXPRESSION);
+            
+            return ParseTerms(expression, history);
+        }
+
+        private static Calculation ParseTerms(Expression expression, Calculation history)
+        {
+            if (expression.Count == 0)
+                throw new Error(ErrorCode.MISSING_TERM);
+            
+            int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
+                new List<Symbol>() {{Symbol.ADD}, {Symbol.SUBTRACT}}, true);
+            Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
+            switch (operation)
             {
-                if (expression.Count == 0)
-                {
-                    throw new UserMessageException(ErrorCode.EMPTY_EXPRESSION);
-                }
-                return ParseTerms(expression, history);
-            };
+                case Symbol.ADD:
+                    return new Calculation(
+                            new List<Calculation>() {
+                                ParseTerms(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
+                                ParseTerms(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history)
+                            },
+                            (a) => a[0] + a[1]
+                        );
+                case Symbol.SUBTRACT:
 
-        private static readonly Func<Expression, Calculation, Calculation> ParseTerms =
-            (expression, history) =>
+                    return new Calculation(new List<Calculation>() {
+                                ParseTerms(expression.Where((symbol, index) => index < symbolIndex).ToExpression().Match(some: lhs => lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() {Symbol.ZERO}), none: () => new Expression()), history),
+                                ParseTerms(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history)
+                            },
+                        (a) => a[0] - a[1]
+                    );
+            }
+
+            return ParseFactor(expression, history);
+        }
+
+        private static Calculation ParseFactor(Expression expression, Calculation history)
+        {
+            if (expression.Count == 0)
+                throw new Error(ErrorCode.MISSING_FACTOR);
+
+            int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.MULTIPLY}, {Symbol.MODULO}, {Symbol.POWER}, {Symbol.SQR}}, true);
+            Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
+
+            List<Calculation> factors = symbolIndex >= 0 ? new List<Calculation>() {
+                ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
+                ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history)
+            } : new List<Calculation>();
+            
+            switch (operation)
             {
-                if (expression.Count == 0)
-                {
-                    throw new UserMessageException(ErrorCode.MISSING_TERM);
-                }
+                case Symbol.MULTIPLY:
+                    return new Calculation(factors, a => a[0] * a[1]);
+                case Symbol.MODULO:
+                    return new Calculation(factors, a => a[0] % a[1]);
+                case Symbol.POWER:
+                    return new Calculation(factors, a => Math.Pow(a[0], a[1]));
+                case Symbol.SQR:
+                    return new Calculation(factors, a => a[0] * a[0]);
+            }
 
-                int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
-                    new List<Symbol>() {{Symbol.ADD}, {Symbol.SUBTRACT}}, true);
-                Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
-                switch (operation)
-                {
-                    case Symbol.ADD:
-                        Expression leftChild = expression.Where((symbol, index) => index < symbolIndex).ToExpression();
-                        Expression rightChild = expression.Where((symbol, index) => index > symbolIndex).ToExpression();
-                        List<Calculation> list = new List<Calculation>()
-                        {
-                            ParseTerms(leftChild, history),
-                            ParseTerms(rightChild, history)
-                        };
-                        return new Calculation(list, (a) => a[0] + a[1]);
-                    case Symbol.SUBTRACT:
-                        Expression lhs = expression.Where((symbol, index) => index < symbolIndex).ToExpression();
-                        lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() {Symbol.ZERO});
-                        Expression rhs = expression.Where((symbol, index) => index > symbolIndex).ToExpression();
-                        return new Calculation(
-                            new List<Calculation>()
-                            {
-                                ParseTerms(lhs, history),
-                                ParseTerms(rhs, history)
-                            },
-                            (a) => a[0] - a[1]
-                        );
-                }
+            return ParseDivision(expression, history);
+        }
 
-                return ParseFactor(expression, history);
-            };
+        private static Calculation ParseDivision(Expression expression, Calculation history)
+        {
+            int symbolIndex =
+                GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.DIVIDE}}, false);
+            Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
 
-        private static readonly Func<Expression, Calculation, Calculation> ParseFactor =
-            (expression, history) =>
+            switch (operation)
             {
-                if (expression.Count == 0)
-                {
-                    throw new UserMessageException(ErrorCode.MISSING_FACTOR);
-                }
-
-                int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
-                    new List<Symbol>() {{Symbol.MULTIPLY}, {Symbol.MODULO}, {Symbol.POWER}, {Symbol.SQR}}, true);
-                Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
-
-                switch (operation)
-                {
-                    case Symbol.MULTIPLY:
-                        return new Calculation(
-                            new List<Calculation>()
+                case Symbol.DIVIDE:
+                    return new Calculation(
+                        Try.Invoke(() =>
                             {
-                                ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),
-                                    history),
-                                ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression(),
-                                    history)
-                            },
-                            a => a[0] * a[1]
-                        );
-                    case Symbol.MODULO:
-                        return new Calculation(
-                            new List<Calculation>()
-                            {
-                                ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),
-                                    history),
-                                ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression(),
-                                    history)
-                            },
-                            a => a[0] % a[1]
-                        );
-                    case Symbol.POWER:
-                        return new Calculation(
-                            new List<Calculation>()
-                            {
-                                ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),
-                                    history),
-                                ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression(),
-                                    history)
-                            },
-                            a => Math.Pow(a[0], a[1])
-                        );
-                    case Symbol.SQR:
-                        return new Calculation(
-                            new List<Calculation>()
-                            {
-                                ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),
-                                    history)
-                            },
-                            (a) => a[0] * a[0]
-                        );
-                }
+                                List<Calculation> children = new List<Calculation>();
 
-                return ParseDivision(expression, history);
-            };
-
-        private static readonly Func<Expression, Calculation, Calculation> ParseDivision =
-            (expression, history) =>
-            {
-                //if (expression.Count == 0)
-                //{
-                //    throw new UserMessageException(CalculationError.MISSING_DIVISION);
-                //}
-
-                int symbolIndex =
-                    GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.DIVIDE}}, false);
-                Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
-
-                switch (operation)
-                {
-                    case Symbol.DIVIDE:
-                        return new Calculation(
-                                new Try<List<Calculation>>( () =>
-                                {
-                                    List<Calculation> children = new List<Calculation>();
-                                    new Try<Calculation>(() =>
-                                        ParseDivision(expression.Where((symbol, index) => index < symbolIndex).ToExpression(),history))
-                                            .Result
-                                            .Match(
-                                                left: (e) => throw new UserMessageException(ErrorCode.MISSING_NUMERATOR),
-                                                right: (child) => children.Add(child)
-                                            );
-                                    new Try<Calculation>(() =>
-                                        ParseDivision(expression.Where((symbol, index) => index > symbolIndex).ToExpression(), history))
-                                            .Result
-                                            .Match(
-                                                left: (e) => throw new UserMessageException(ErrorCode.MISSING_DENOMINATOR),
-                                                right: (child) => children.Add(child)
-                                            );
-                                    return children;
-
-                                })
-                                .Result.Match(
-                                    left: (e) => throw new UserMessageException(ErrorCode.MISSING_FACTOR),
-                                    right: (children) => children
-                                ),
-                            a =>
-                            {
-                                return new Try<double>(() =>
-                                {
-                                    return a[1] != 0 ? a[0] / a[1] : throw new UserMessageException(ErrorCode.DIVISION_BY_ZERO);
-                                }).Result.Match(
-                                    left: (e) => throw new UserMessageException(ErrorCode.UNKNOWN_ERROR),
-                                    right: (result) => result
+                                expression.Where((symbol, index) => index < symbolIndex).ToExpression().Match(
+                                    some: (leftHandSide) =>
+                                        Try.Invoke(() => ParseDivision(leftHandSide, history)).Match(
+                                            success: (leftChild) => children.Add(leftChild),
+                                            error: (e) => throw e
+                                        ),
+                                    none: () => throw new Error(ErrorCode.MISSING_NUMERATOR)
                                 );
-                            });
-                }
 
-                return ParseParenthesis(expression, history);
-            };
+                                expression.Where((symbol, index) => index > symbolIndex).ToExpression().Match(
+                                    some: (rightHandSide) => Try.Invoke(() => ParseDivision(rightHandSide, history)).Match(
+                                        success: (rightChild) => children.Add(rightChild),
+                                        error: (e) => throw e
+                                        ),
+                                    none: () => throw new Error(ErrorCode.MISSING_DENOMINATOR)
+                                );
 
-        private static readonly Func<Expression, Calculation, Calculation> ParseParenthesis =
-            (expression, history) =>
+                                return children;
+
+                            }).Unwrap(),
+                        a => a[1] != 0 ? a[0] / a[1] : throw new Error(ErrorCode.DIVISION_BY_ZERO)
+                    );
+            }
+
+            return ParseParenthesis(expression, history);
+        }
+
+        private static Calculation ParseParenthesis(Expression expression, Calculation history)
+        {
+            Symbol operation = expression.Count > 0 ? expression.First() : Symbol.EOF;
+
+            switch (operation)
             {
-                Symbol operation = expression.Count > 0 ? expression.First() : Symbol.EOF;
 
-                switch (operation)
-                {
+                case Symbol.LOGARITHM:
+                    return ParseParenthesisHelper(expression, history, x => Math.Log10(x[0]));
+                case Symbol.NATURAL_LOGARITHM:
+                    return ParseParenthesisHelper(expression, history, x => Math.Log(x[0]));
+                case Symbol.EXP:
+                    return ParseParenthesisHelper(expression, history, x => Math.Exp(x[0]));
+                case Symbol.SQRT:
+                    return ParseParenthesisHelper(expression, history, x => Math.Sqrt(x[0]));
+                case Symbol.SINE:
+                    return ParseParenthesisHelper(expression, history, x => CalculiMath.Sin(x[0]));
+                case Symbol.COSINE:
+                    return ParseParenthesisHelper(expression, history, x => CalculiMath.Cos(x[0]));
+                case Symbol.TANGENT:
+                    return ParseParenthesisHelper(expression, history, x => CalculiMath.Tan(x[0]));
+                case Symbol.SECANT:
+                    return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Cos(x[0]));
+                case Symbol.COSECANT:
+                    return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Sin(x[0]));
+                case Symbol.COTANGENT:
+                    return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Tan(x[0]));
+                case Symbol.LEFT_PARENTHESIS:
+                    return ParseParenthesisHelper(expression, history, x => x[0]);
+            }
 
-                    case Symbol.LOGARITHM:
-                        return ParseParenthesisHelper(expression, history, x => Math.Log10(x[0]));
-                    case Symbol.NATURAL_LOGARITHM:
-                        return ParseParenthesisHelper(expression, history, x => Math.Log(x[0]));
-                    case Symbol.EXP:
-                        return ParseParenthesisHelper(expression, history, x => Math.Exp(x[0]));
-                    case Symbol.SQRT:
-                        return ParseParenthesisHelper(expression, history, x => Math.Sqrt(x[0]));
-                    case Symbol.SINE:
-                        return ParseParenthesisHelper(expression, history, x => CalculiMath.Sin(x[0]));
-                    case Symbol.COSINE:
-                        return ParseParenthesisHelper(expression, history, x => CalculiMath.Cos(x[0]));
-                    case Symbol.TANGENT:
-                        return ParseParenthesisHelper(expression, history, x => CalculiMath.Tan(x[0]));
-                    case Symbol.SECANT:
-                        return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Cos(x[0]));
-                    case Symbol.COSECANT:
-                        return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Sin(x[0]));
-                    case Symbol.COTANGENT:
-                        return ParseParenthesisHelper(expression, history, x => 1 / CalculiMath.Tan(x[0]));
-                    case Symbol.LEFT_PARENTHESIS:
-                        return ParseParenthesisHelper(expression, history, x => x[0]);
-                }
+            return ParseConstant(expression, history);
+        }
 
-                return ParseConstant(expression, history);
-            };
-
-        private static readonly Func<Expression, Calculation, Func<List<double>, double>, Calculation> ParseParenthesisHelper =
-            (expression, history, function) =>
+        private static Calculation ParseParenthesisHelper(Expression expression, Calculation history, Func<List<double>, double>  function)
+        {
+            if (expression.Count < 3 || !expression.Last().Equals(Symbol.RIGHT_PARENTHESIS))
             {
-                if (expression.Count < 3 || !expression.Last().Equals(Symbol.RIGHT_PARENTHESIS))
-                {
-                    throw new UserMessageException(ErrorCode.MISMATCHING_PARENTHESIS);
-                }
+                throw new Error(ErrorCode.MISMATCHING_PARENTHESIS);
+            }
+
+            return expression.Where((symbol, index) => index != 0 && index != expression.Count - 1).ToExpression().Match(
+                some: (expr) => new Calculation( new List<Calculation>() { ParseExpression(expr, history) }, function ),
+                none: () =>new Calculation(new List<Calculation>() { ParseExpression(new Expression(), history) }, function)
+            );
+        }
+
+        private static Calculation ParseConstant(Expression expression, Calculation history)
+        {
+
+            List<Symbol> constants = expression.ToList().FindAll((s) => s == Symbol.PI || s == Symbol.EULER_CONSTANT);
+
+            if (constants.Count() > 0 && expression.Count > 1)
+                throw new Error(ErrorCode.REAL_NUMBER_MIXED_WITH_CONSTANT);
+
+            if (constants.Count() > 1)
+                throw new Error(ErrorCode.MULTIPLE_CONSTANTS);
+
+            switch (constants.FirstOrDefault())
+            {
+                case Symbol.PI:
+                    return Calculation.FromConstant(Math.PI);
+                case Symbol.EULER_CONSTANT:
+                    return Calculation.FromConstant(Math.E);
+                default:
+                    return ParsePoint(expression, history);
+            }
+        }
+
+        private static Calculation ParsePoint(Expression expression, Calculation history)
+        {
+            if (expression.Contains(Symbol.POINT))
+            {
+                Expression lhs = expression.TakeWhile(symbol => !symbol.Equals(Symbol.POINT)).ToExpression().UnwrapOr(() => new Expression(new List<Symbol>() { Symbol.ZERO }));
+                Expression rhs = expression.SkipWhile(symbol => !symbol.Equals(Symbol.POINT)).Skip(1).ToExpression().UnwrapOr(() => new Expression(new List<Symbol>() { Symbol.ZERO }));
+
                 return new Calculation(
                     new List<Calculation>()
                     {
-                        ParseExpression(
-                            expression.Where((symbol, index) => index != 0 && index != expression.Count - 1)
-                                .ToExpression(),
-                            history)
+                            ParseInteger(lhs, history),
+                            ParseInteger(rhs, history)
                     },
-                    function
+                    a => a[0] + (a[1] / Math.Pow(10, (rhs.Count)))
                 );
-            };
+            }
 
-        private static readonly Func<Expression, Calculation, Calculation> ParseConstant =
-            (expression, history) =>
+            return ParseInteger(expression, history);
+        }
+
+        private static Calculation ParseInteger(Expression expression, Calculation history)
+        {
+            double n = expression.Aggregate(
+                0.0,
+                (result, symbol) => result * 10.0 + symbol.ToInteger()
+            );
+            return new Calculation(
+                new List<Calculation>(),
+                x => n
+            );
+        }
+
+        private static List<int> MarkScope (Expression expression)
+        {
+            List<int> scopeMarker = new List<int>(expression.Count);
+            int scope = 0;
+            for (int i = 0; i < expression.Count; i++)
             {
-
-                List<Symbol> constants = expression.ToList().FindAll((s) => s == Symbol.PI || s == Symbol.EULER_CONSTANT);
-
-                if (constants.Count() > 0 && expression.Count > 1)
-                    throw new UserMessageException(ErrorCode.REAL_NUMBER_MIXED_WITH_CONSTANT);
-
-                if (constants.Count() > 1)
-                    throw new UserMessageException(ErrorCode.MULTIPLE_CONSTANTS);
-
-                switch (constants.FirstOrDefault())
+                if (expression[i].IsLeftParenthesisEquivalent())
                 {
-                    case Symbol.PI:
-                        return Calculation.FromConstant(Math.PI);
-                    case Symbol.EULER_CONSTANT:
-                        return Calculation.FromConstant(Math.E);
-                    default:
-                        return ParsePoint(expression, history);
-                }
-            };
-
-        private static readonly Func<Expression, Calculation, Calculation> ParsePoint =
-            (expression, history) =>
-            {
-                if (expression.Contains(Symbol.POINT))
-                {
-                    Expression lhs = expression.TakeWhile(symbol => !symbol.Equals(Symbol.POINT)).ToExpression();
-                    Expression rhs = expression.SkipWhile(symbol => !symbol.Equals(Symbol.POINT)).Skip(1)
-                        .ToExpression();
-                    if (lhs.Count == 0 && rhs.Count == 0)
-                    {
-                        throw new UserMessageException(ErrorCode.INVALID_POINT);
-                    }
-
-                    lhs = lhs.Count > 0 ? lhs : new Expression(new List<Symbol>() { Symbol.ZERO });
-                    rhs = rhs.Count > 0 ? rhs : new Expression(new List<Symbol>() { Symbol.ZERO });
-                    return new Calculation(
-                        new List<Calculation>()
-                        {
-                                ParseInteger(lhs, history),
-                                ParseInteger(rhs, history)
-                        },
-                        a => a[0] + (a[1] / Math.Pow(10, (rhs.Count)))
-                    );
+                    scope++;
                 }
 
-                return ParseInteger(expression, history);
-            };
-
-        private static readonly Func<Expression, Calculation, Calculation> ParseInteger =
-            (expression, history) =>
-            {
-                double n = expression.Aggregate(
-                    0.0,
-                    (result, symbol) => result * 10.0 + symbol.ToInteger()
-                );
-                return new Calculation(
-                    new List<Calculation>(),
-                    x => n
-                );
-            };
-
-        private static readonly Func<Expression, List<int>> MarkScope =
-            (expression) =>
-            {
-                List<int> scopeMarker = new List<int>(expression.Count);
-                int scope = 0;
-                for (int i = 0; i < expression.Count; i++)
+                if (expression[i].Equals(Symbol.RIGHT_PARENTHESIS))
                 {
-                    if (expression[i].IsLeftParenthesisEquivalent())
-                    {
-                        scope++;
-                    }
-
-                    if (expression[i].Equals(Symbol.RIGHT_PARENTHESIS))
-                    {
-                        scope--;
-                    }
-
-                    scopeMarker.Insert(i, scope);
+                    scope--;
                 }
 
-                if (scope != 0)
-                {
-                    throw new UserMessageException(ErrorCode.MISMATCHING_PARENTHESIS);
-                }
+                scopeMarker.Insert(i, scope);
+            }
 
-                return scopeMarker;
-            };
-
-        private static readonly Func<Expression, List<Symbol>, List<int>>  GetIndicesOfGlobalOperatorsOfTypes =
-            (expression, types) =>
+            if (scope != 0)
             {
-                List<int> indices = new List<int>();
-                List<int> scopeMarker = MarkScope(expression);
-                foreach (Symbol type in types)
-                {
-                    indices = expression
-                        .Select(
-                            (symbol, index) => (type.Equals(symbol) && scopeMarker[index] == 0 ? index : -1)
-                        )
-                        .Where(isGlobalScope => isGlobalScope >= 0)
-                        .ToList();
-                    if (indices.Any()) return indices;
-                }
+                throw new Error(ErrorCode.MISMATCHING_PARENTHESIS);
+            }
 
-                return indices;
-            };
+            return scopeMarker;
+        }
 
-        private static readonly Func<Expression, List<Symbol>, bool, int> GetIndexOfFirstGlobalOperatorOfTypes =
-            (expression, types, first) =>
+        private static List<int>  GetIndicesOfGlobalOperatorsOfTypes (Expression expression, List<Symbol> types)
+        {
+            List<int> indices = new List<int>();
+            List<int> scopeMarker = MarkScope(expression);
+            foreach (Symbol type in types)
             {
-                List<int> globalOperationIndices = GetIndicesOfGlobalOperatorsOfTypes(expression, types);
-                return first
-                    ? globalOperationIndices.Count > 0 ? globalOperationIndices.First() : -1
-                    : globalOperationIndices.Count > 0 ? globalOperationIndices.Last() : -1;
-            };
+                indices = expression
+                    .Select(
+                        (symbol, index) => (type.Equals(symbol) && scopeMarker[index] == 0 ? index : -1)
+                    )
+                    .Where(isGlobalScope => isGlobalScope >= 0)
+                    .ToList();
+                if (indices.Any()) return indices;
+            }
+
+            return indices;
+        }
+
+        private static int GetIndexOfFirstGlobalOperatorOfTypes (Expression expression, List<Symbol> types, bool first)
+        {
+            List<int> globalOperationIndices = GetIndicesOfGlobalOperatorsOfTypes(expression, types);
+            return first
+                ? globalOperationIndices.Count > 0 ? globalOperationIndices.First() : -1
+                : globalOperationIndices.Count > 0 ? globalOperationIndices.Last() : -1;
+        }
     }
 }

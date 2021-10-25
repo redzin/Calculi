@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Calculi.Support
 {
-    public class Either<L,R>
+    public class Either<L, R>
     {
         private readonly L _left;
         private readonly R _right;
@@ -22,7 +22,7 @@ namespace Calculi.Support
             _isLeft = false;
         }
 
-        public T Match<T>(Func<L,T> left, Func<R,T> right)
+        public T Match<T>(Func<L, T> left, Func<R, T> right)
         {
             return _isLeft ? left(_left) : right(_right);
         }
@@ -45,5 +45,8 @@ namespace Calculi.Support
                 ? new Either<TL, TR>(left(_left))
                 : new Either<TL, TR>(right(_right));
         }
+
+        public static implicit operator Either<L, R>(L left) => new Either<L, R>(left);
+        public static implicit operator Either<L, R>(R right) => new Either<L, R>(right);
     }
 }

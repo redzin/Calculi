@@ -13,6 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Maybe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Either.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Subscription.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ErrorHandling\Try.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Try.cs" />
   </ItemGroup>
 </Project>
