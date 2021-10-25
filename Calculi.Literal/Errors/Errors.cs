@@ -10,6 +10,7 @@ namespace Calculi.Literal.Errors
         MISMATCHING_PARENTHESIS,
         MISSING_TERM,
         MISSING_FACTOR,
+        MISSING_EXPONENT,
         MISSING_NUMERATOR,
         MISSING_DENOMINATOR,
         DIVISION_BY_ZERO,

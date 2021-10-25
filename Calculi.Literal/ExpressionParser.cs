@@ -62,24 +62,39 @@ namespace Calculi.Literal.Parsing
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.MULTIPLY}, {Symbol.MODULO}, {Symbol.POWER}, {Symbol.SQR}}, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
 
-            List<Calculation> factors = symbolIndex >= 0 ? new List<Calculation>() {
-                ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
-                ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history)
-            } : new List<Calculation>();
-            
+            if (symbolIndex < 0)
+                return ParseDivision(expression, history);
+
+            List<Calculation> factors;
             switch (operation)
             {
                 case Symbol.MULTIPLY:
+                    factors = new List<Calculation>() {
+                        ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
+                        ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history)
+                    };
                     return new Calculation(factors, a => a[0] * a[1]);
                 case Symbol.MODULO:
+                    factors = new List<Calculation>() {
+                        ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
+                        ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history)
+                    };
                     return new Calculation(factors, a => a[0] % a[1]);
                 case Symbol.POWER:
+                    factors = new List<Calculation>() {
+                        ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
+                        ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => throw new Error(ErrorCode.MISSING_EXPONENT)), history)
+                    };
                     return new Calculation(factors, a => Math.Pow(a[0], a[1]));
                 case Symbol.SQR:
+                    factors = new List<Calculation>() {
+                        ParseFactor(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression()), history),
+                        ParseFactor(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => throw new Error(ErrorCode.MISSING_EXPONENT)), history)
+                    };
                     return new Calculation(factors, a => a[0] * a[0]);
             }
 
-            return ParseDivision(expression, history);
+            throw new Error(ErrorCode.UNKNOWN_ERROR);
         }
 
         private static Calculation ParseDivision(Expression expression, Calculation history)

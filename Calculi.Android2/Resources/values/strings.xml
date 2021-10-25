@@ -104,6 +104,7 @@
   <string name="errorMismatchingParentheses">Mismatching parentheses</string>
   <string name="errorMissingTerm">Missing term</string>
   <string name="errorMissingFactor">Missing factor</string>
+  <string name="errorMissingExponent">Missing exponent</string>
   <string name="errorMissingNumerator">Missing numerator</string>
   <string name="errorMissingDenominator">Missing denominator</string>
   <string name="errorDivisionByZero">Cannot divide by zero</string>
@@ -111,8 +112,5 @@
   <string name="errorRealNumberMixedWithConstant">Cannot evaluate number</string>
   <string name="errorMultipleConstants">Cannot evaluate constants</string>
   <string name="errorUnknown">An error occured</string>
-
-
-
 
 </resources>

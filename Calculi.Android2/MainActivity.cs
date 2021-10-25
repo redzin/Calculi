@@ -66,11 +66,12 @@ namespace Calculi.Android2
             });
         }
 
-        private static Dictionary<ErrorCode, int> Errors = new Dictionary<ErrorCode, int>() {
+        private static Dictionary<ErrorCode, int> ErrorMessages = new Dictionary<ErrorCode, int>() {
             { ErrorCode.EMPTY_EXPRESSION, Resource.String.errorEmptyExpression },
             { ErrorCode.MISMATCHING_PARENTHESIS, Resource.String.errorMismatchingParentheses },
             { ErrorCode.MISSING_TERM, Resource.String.errorMissingTerm },
             { ErrorCode.MISSING_FACTOR, Resource.String.errorMissingFactor },
+            { ErrorCode.MISSING_EXPONENT, Resource.String.errorMissingExponent },
             { ErrorCode.MISSING_NUMERATOR, Resource.String.errorMissingNumerator },
             { ErrorCode.MISSING_DENOMINATOR, Resource.String.errorMissingDenominator },
             { ErrorCode.DIVISION_BY_ZERO, Resource.String.errorDivisionByZero },
@@ -99,8 +100,8 @@ namespace Calculi.Android2
                     {
                         if (e is Exception)
                         {
-
-                            Toast t = Toast.MakeText(BaseContext, Errors[((Error)e).Code], ToastLength.Long);
+                            int text = Try.Invoke(() => ErrorMessages[((Error)e).Code]).Result.Match(left: s => s, right: e => ErrorMessages[ErrorCode.UNKNOWN_ERROR]);
+                            Toast t = Toast.MakeText(BaseContext, text, ToastLength.Long);
                             t.Show();
 
                         }
