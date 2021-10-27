@@ -17,6 +17,10 @@ namespace Calculi.Literal.Extensions
         {
             return Symbols.Numerals.Contains(symbol);
         }
+        public static bool IsConstant(this Symbol symbol)
+        {
+            return Symbols.Constants.Contains(symbol);
+        }
         public static int ToInteger(this Symbol symbol)
         {
             switch (symbol)

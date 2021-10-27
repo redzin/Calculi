@@ -81,5 +81,17 @@ namespace Calculi.Literal.Types
                 };
             }
         }
+
+        public static List<Symbol> Constants
+        {
+            get
+            {
+                return new List<Symbol>()
+                {
+                    Symbol.PI,
+                    Symbol.EULER_CONSTANT
+                };
+            }
+        }
     }
 }

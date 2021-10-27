@@ -28,8 +28,7 @@ namespace Calculi.Literal.Parsing
             if (expression.Count == 0)
                 throw new Error(ErrorCode.MISSING_TERM);
             
-            int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression,
-                new List<Symbol>() {{Symbol.ADD}, {Symbol.SUBTRACT}}, true);
+            int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.ADD}, {Symbol.SUBTRACT}}, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
             switch (operation)
             {
@@ -58,6 +57,23 @@ namespace Calculi.Literal.Parsing
         {
             if (expression.Count == 0)
                 throw new Error(ErrorCode.MISSING_FACTOR);
+
+            //int leftParenthsisSymbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, Symbols.LeftParenthesisEquivalents, true);
+            //if (leftParenthsisSymbolIndex > 0 && (expression.ElementAt(leftParenthsisSymbolIndex - 1).IsConstant() || expression.ElementAt(leftParenthsisSymbolIndex - 1).IsNumeral() || expression.ElementAt(leftParenthsisSymbolIndex - 1).Equals(Symbol.RIGHT_PARENTHESIS)))
+            //    return new Calculation(new List<Calculation>()
+            //            {
+            //                ParseFactor(expression.ToList().GetRange(0, leftParenthsisSymbolIndex).ToExpression().Unwrap(), history),
+            //                ParseFactor(expression.ToList().GetRange(leftParenthsisSymbolIndex, expression.Count-leftParenthsisSymbolIndex).ToExpression().Unwrap(), history)
+            //            },
+            //            a => a[0] * a[1]);
+
+            //int rightParenthsisSymbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { Symbol.RIGHT_PARENTHESIS }, true);
+            //return new Calculation(new List<Calculation>()
+            //            {
+            //                ParseFactor(expression.ToList().GetRange(0, leftParenthsisSymbolIndex).ToExpression().Unwrap(), history),
+            //                ParseFactor(expression.ToList().GetRange(leftParenthsisSymbolIndex, expression.Count-leftParenthsisSymbolIndex).ToExpression().Unwrap(), history)
+            //            },
+            //            a => a[0] * a[1]);
 
             int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() {{Symbol.MULTIPLY}, {Symbol.MODULO}, {Symbol.POWER}, {Symbol.SQR}}, true);
             Symbol operation = symbolIndex >= 0 ? expression[symbolIndex] : Symbol.EOF;
@@ -187,24 +203,28 @@ namespace Calculi.Literal.Parsing
 
         private static Calculation ParseConstant(Expression expression, Calculation history)
         {
+            int symbolIndex = GetIndexOfFirstGlobalOperatorOfTypes(expression, new List<Symbol>() { { Symbol.PI }, { Symbol.EULER_CONSTANT } }, true);
+
+            if (expression.Count > 1 && symbolIndex >= 0)
+                return new Calculation(
+                    new List<Calculation>()
+                    {
+                        ParseConstant(expression.Where((symbol, index) => index < symbolIndex).ToExpression().UnwrapOr(() => new Expression(new List<Symbol>() { Symbol.ONE})), history),
+                        ParseConstant(expression.Where((symbol, index) => index == symbolIndex).ToExpression().Unwrap(), history),
+                        ParseConstant(expression.Where((symbol, index) => index > symbolIndex).ToExpression().UnwrapOr(() => new Expression(new List<Symbol>() { Symbol.ONE})), history),
+                    },
+                    (a) => a[0] * a[1] * a[2]);
 
             List<Symbol> constants = expression.ToList().FindAll((s) => s == Symbol.PI || s == Symbol.EULER_CONSTANT);
-
-            if (constants.Count() > 0 && expression.Count > 1)
-                throw new Error(ErrorCode.REAL_NUMBER_MIXED_WITH_CONSTANT);
-
-            if (constants.Count() > 1)
-                throw new Error(ErrorCode.MULTIPLE_CONSTANTS);
-
             switch (constants.FirstOrDefault())
             {
                 case Symbol.PI:
                     return Calculation.FromConstant(Math.PI);
                 case Symbol.EULER_CONSTANT:
                     return Calculation.FromConstant(Math.E);
-                default:
-                    return ParsePoint(expression, history);
             }
+
+            return ParsePoint(expression, history);
         }
 
         private static Calculation ParsePoint(Expression expression, Calculation history)
